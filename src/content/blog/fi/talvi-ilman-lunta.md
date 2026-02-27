@@ -2,7 +2,7 @@
 title: 'Talvi ilman lunta'
 description: 'Joulukuun loppu, keskipäivä. Aurinko paistaa matalalta eikä lunta ole. Edessä on vielä kaksi kuukautta talvea — mitä se tuo tullessaan?'
 pubDate: '2025-12-28'
-heroImage: '../../images/20251228_121252.jpg'
+heroImage: '../../../images/20251228_121252.jpg'
 ---
 
 28\. joulukuuta, keskipäivä. Aurinko seisoo matalalla tähän aikaan vuodesta meidän leveysasteellamme. Lunta ei ole.
