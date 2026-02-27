@@ -16,7 +16,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.blog': 'Blogi',
 
 		// Site
-		'site.title': 'Aurinkopuutarha Mustio',
+		'site.title': 'Aurinkotarha Mustio',
 		'site.description': 'Moderni omenatarha Mustiossa, Raaseporissa. Kaksi hehtaaria tarkasti viljeltyjä omenoita, päärynöitä ja viinirypäleitä historiallisen Mustion Linnan naapurissa.',
 
 		// Hero
@@ -52,7 +52,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.title': 'Tietoa meistä',
 		'about.intro': 'Moderni omenatarha Mustion kylässä, perustettu 2024. Kaksi hehtaaria tarkasti viljeltyä maata Raaseporissa.',
 		'about.story.title': 'Tarinamme',
-		'about.story.text': 'Aurinkopuutarha syntyi rakkaudesta hedelmänviljelyyn ja uskosta siihen, että modernit menetelmät ja pohjoiset olosuhteet tuottavat poikkeuksellisia hedelmiä. Tilamme sijaitsee Mustion idyllisessä ympäristössä, aivan historiallisen Mustion Linnan tuntumassa.',
+		'about.story.text': 'Aurinkotarha syntyi rakkaudesta hedelmänviljelyyn ja uskosta siihen, että modernit menetelmät ja pohjoiset olosuhteet tuottavat poikkeuksellisia hedelmiä. Tilamme sijaitsee Mustion idyllisessä ympäristössä, aivan historiallisen Mustion Linnan tuntumassa.',
 		'about.orchard.title': 'Omenatarhamme',
 		'about.orchard.text': 'Käytämme moderneja intensiiviviljelymenetelmiä: kääpiöperusrunkoja, tiheää istutusta jopa 50 cm välein, tippukastelua, fertigaatiota sekä kevät- ja kesäleikkausta. Jokainen puu muotoillaan kapeaksi 2D-latvukseksi, enintään 40 cm leveäksi, jotta auringonvalo tavoittaa jokaisen hedelmän — näin omenamme saavuttavat täyden makunsa ja syvimmän värinsä. Tämä lähestymistapa vähentää luonnostaan myös kasvinsuojelun tarvetta. Omenoiden lisäksi kokeilemme päärynä-, luumu- ja kriikunalajikkeita sekä ylläpidämme viinirypäleiden koeistutuksia.',
 		'about.contact.title': 'Ota yhteyttä',
@@ -67,7 +67,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.blog': 'Blogg',
 
 		// Site
-		'site.title': 'Aurinkopuutarha Svartå',
+		'site.title': 'Aurinkotarha Svartå',
 		'site.description': 'Modern äppelodling i Svartå, Raseborg. Två hektar noggrant odlade äpplen, päron och vindruvor intill det historiska Svartå Slott.',
 
 		// Hero
@@ -103,7 +103,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.title': 'Om oss',
 		'about.intro': 'Modern äppelodling i byn Svartå, grundad 2024. Två hektar noggrant odlad mark i Raseborg.',
 		'about.story.title': 'Vår historia',
-		'about.story.text': 'Aurinkopuutarha föddes ur en kärlek till fruktodling och en övertygelse om att moderna metoder och nordiska förhållanden ger exceptionell frukt. Vår gård ligger i Svartås idylliska omgivningar, alldeles intill det historiska Svartå Slott.',
+		'about.story.text': 'Aurinkotarha föddes ur en kärlek till fruktodling och en övertygelse om att moderna metoder och nordiska förhållanden ger exceptionell frukt. Vår gård ligger i Svartås idylliska omgivningar, alldeles intill det historiska Svartå Slott.',
 		'about.orchard.title': 'Vår äppelodling',
 		'about.orchard.text': 'Vi använder moderna intensiva metoder: dvärggrundstammar, tät plantering med så lite som 50 cm mellanrum, droppbevattning, fertigering samt vår- och sommarbeskärning. Varje träd formas till en smal 2D-krona, högst 40 cm bred, så att solljuset når varje frukt — och ger våra äpplen deras fulla smak och djupaste färg. Denna metod minskar naturligt även behovet av växtskydd. Utöver äpplen experimenterar vi med päron-, plommon- och körsbärsplommonsorter samt har provplanteringar av vindruvor.',
 		'about.contact.title': 'Kontakta oss',
@@ -118,7 +118,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.blog': 'Blog',
 
 		// Site
-		'site.title': 'Aurinkopuutarha Mustio',
+		'site.title': 'Aurinkotarha Mustio',
 		'site.description': 'A modern apple orchard in Mustio, Raasepori. Two hectares of precisely cultivated apples, pears and grapes next to the historic Svartå Manor.',
 
 		// Hero
@@ -154,7 +154,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.title': 'About us',
 		'about.intro': 'A modern apple orchard in the village of Mustio, founded 2024. Two hectares of precisely cultivated land in Raasepori.',
 		'about.story.title': 'Our story',
-		'about.story.text': 'Aurinkopuutarha was born from a love of fruit growing and a belief that modern methods and northern conditions produce exceptional fruit. Our farm is situated in the idyllic surroundings of Mustio, right next to the historic Svartå Manor.',
+		'about.story.text': 'Aurinkotarha was born from a love of fruit growing and a belief that modern methods and northern conditions produce exceptional fruit. Our farm is situated in the idyllic surroundings of Mustio, right next to the historic Svartå Manor.',
 		'about.orchard.title': 'Our orchard',
 		'about.orchard.text': 'We use modern intensive methods: dwarf rootstocks, high-density planting as close as 50 cm apart, drip irrigation, fertigation, and careful spring and summer pruning. Each tree is trained into a narrow 2D canopy, no wider than 40 cm, so that sunlight reaches every fruit — giving our apples their fullest flavour and deepest colour. This approach also naturally reduces the need for crop protection. Beyond apples, we experiment with pear, plum and cherry plum varieties, and maintain trial plantings of grape.',
 		'about.contact.title': 'Contact us',
