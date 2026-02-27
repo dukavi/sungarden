@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Aurinkopuutarha Mustio — a multilingual static website for an apple orchard farm in Mustio, Raasepori. Built with Astro 5. Company name: Mustion Hedelmät.
+Aurinkotarha Mustio — a multilingual static website for an apple orchard farm in Mustio, Raasepori. Built with Astro 5. Company name: Mustion Hedelmät.
 
 ## Commands
 

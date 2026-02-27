@@ -27,7 +27,7 @@ const posts = (await getCollection('blog'))
 		<!-- Hero -->
 		<section class="hero">
 			<div class="hero-image-wrapper">
-				<Image src={heroImage} alt="Aurinkopuutarha" width={1400} height={900} class="hero-img" />
+				<Image src={heroImage} alt="Aurinkotarha" width={1400} height={900} class="hero-img" />
 				<div class="hero-overlay">
 					<div class="hero-content">
 						<h1>{t(lang, 'hero.tagline')}</h1>
@@ -107,7 +107,7 @@ const posts = (await getCollection('blog'))
 		overflow: hidden;
 		height: 100vh;
 		min-height: 600px;
-		max-height: 1000px;
+		max-height: 800px;
 	}
 	.hero-img {
 		width: 100%;
@@ -120,8 +120,8 @@ const posts = (await getCollection('blog'))
 		inset: 0;
 		background: linear-gradient(
 			to bottom,
-			rgba(0, 0, 0, 0.1) 0%,
-			rgba(0, 0, 0, 0.45) 100%
+			rgba(0, 0, 0, 0.05) 0%,
+			rgba(0, 0, 0, 0.35) 100%
 		);
 		display: flex;
 		align-items: flex-end;

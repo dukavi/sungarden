@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 :root {
-	--bg: #f8f7f4;
-	--bg-alt: #f0efeb;
+	--bg: #faf8f3;
+	--bg-alt: #f2efe6;
 	--text: #1a1a1a;
 	--text-muted: #6b6b6b;
-	--accent: #6b7c5e;
-	--accent-hover: #556a49;
-	--border: #e0ddd6;
+	--accent: #7a8c50;
+	--accent-hover: #5e6e3c;
+	--border: #ddd8c8;
 	--card-bg: #ffffff;
 	--footer-bg: #1a1a1a;
 	--footer-text: #a0a0a0;
@@ -16,13 +16,13 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--bg: #111110;
-		--bg-alt: #1a1918;
-		--text: #e8e5de;
-		--text-muted: #8a8880;
-		--accent: #8a9e7a;
-		--accent-hover: #a0b690;
-		--border: #2a2926;
+		--bg: #131210;
+		--bg-alt: #1c1b18;
+		--text: #ebe8e0;
+		--text-muted: #8c8978;
+		--accent: #92a466;
+		--accent-hover: #a8bc7c;
+		--border: #2c2a24;
 		--card-bg: #1a1918;
 		--footer-bg: #0a0a09;
 		--footer-text: #6b6960;
@@ -41,7 +41,7 @@ body {
 	background-color: var(--bg);
 	color: var(--text);
 	font-size: 17px;
-	line-height: 1.7;
+	line-height: 1.75;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -54,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 }
 
-h1 { font-size: 3.5em; font-weight: 300; }
+h1 { font-size: 3em; font-weight: 300; }
 h2 { font-size: 2.4em; font-weight: 400; }
 h3 { font-size: 1.8em; }
 h4 { font-size: 1.4em; }
@@ -79,7 +79,7 @@ p {
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 0;
+	border-radius: 4px;
 }
 
 blockquote {
@@ -126,7 +126,7 @@ hr {
 	text-decoration: none;
 	text-transform: uppercase;
 	letter-spacing: 0.12em;
-	border-radius: 0;
+	border-radius: 4px;
 	transition: all 0.3s ease;
 	cursor: pointer;
 	border: none;

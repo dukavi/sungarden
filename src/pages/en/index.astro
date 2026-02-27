@@ -26,7 +26,7 @@ const posts = (await getCollection('blog'))
 
 		<section class="hero">
 			<div class="hero-image-wrapper">
-				<Image src={heroImage} alt="Aurinkopuutarha" width={1400} height={900} class="hero-img" />
+				<Image src={heroImage} alt="Aurinkotarha" width={1400} height={900} class="hero-img" />
 				<div class="hero-overlay">
 					<div class="hero-content">
 						<h1>{t(lang, 'hero.tagline')}</h1>
@@ -95,9 +95,9 @@ const posts = (await getCollection('blog'))
 
 <style>
 	.hero { position: relative; }
-	.hero-image-wrapper { position: relative; overflow: hidden; height: 100vh; min-height: 600px; max-height: 1000px; }
+	.hero-image-wrapper { position: relative; overflow: hidden; height: 100vh; min-height: 600px; max-height: 800px; }
 	.hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-	.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%); display: flex; align-items: flex-end; justify-content: flex-start; }
+	.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 100%); display: flex; align-items: flex-end; justify-content: flex-start; }
 	.hero-content { padding: 6em 3em; max-width: 700px; }
 	.hero-content h1 { color: #ffffff; font-size: 4em; margin-bottom: 0.3em; font-weight: 300; line-height: 1.05; }
 	.hero-content p { color: rgba(255,255,255,0.85); font-size: 1.1em; max-width: 500px; margin-bottom: 2em; line-height: 1.6; }
