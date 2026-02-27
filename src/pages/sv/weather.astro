@@ -55,6 +55,25 @@ const lang = 'sv';
 				</div>
 
 				<p id="weather-error" class="nodata" hidden>{t(lang, 'weather.nodata')}</p>
+
+				<div class="sat-section" data-ongoing={t(lang, 'weather.sat.ongoing')}>
+					<h2>{t(lang, 'weather.sat.title')}</h2>
+					<div id="sat-loading" class="loading"><div class="spinner"></div></div>
+					<div id="sat-content" hidden>
+						<div class="table-wrapper">
+							<table>
+								<thead>
+									<tr>
+										<th>{t(lang, 'weather.sat.year')}</th>
+										<th>{t(lang, 'weather.sat.sum')}</th>
+									</tr>
+								</thead>
+								<tbody id="sat-tbody"></tbody>
+							</table>
+						</div>
+					</div>
+					<p class="source">{t(lang, 'weather.sat.method')}</p>
+				</div>
 			</div>
 		</main>
 		<Footer lang={lang} />
@@ -303,6 +322,62 @@ const lang = 'sv';
 			monthPicker.addEventListener('change', () => loadWeather(getSelectedMonth()));
 
 			loadWeather(getSelectedMonth());
+
+			async function loadSAT() {
+				const satLoading = document.getElementById('sat-loading')!;
+				const satContent = document.getElementById('sat-content')!;
+				const satTbody = document.getElementById('sat-tbody')!;
+				const ongoingText = document.querySelector('.sat-section')!.getAttribute('data-ongoing') || '(ongoing)';
+
+				try {
+					const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+					const today = new Date();
+					const thisYear = today.getFullYear();
+					const years = [];
+					for (let y = 2020; y <= thisYear; y++) years.push(y);
+
+					const results = await Promise.all(years.map(async (year) => {
+						const startStr = `${year}-01-01`;
+						const endStr = year === thisYear ? fmt(today) : `${year}-12-31`;
+						const params = new URLSearchParams({
+							service: 'WFS',
+							version: '2.0.0',
+							request: 'getFeature',
+							storedquery_id: 'fmi::observations::weather::daily::simple',
+							place: 'mustio',
+							starttime: `${startStr}T00:00:00Z`,
+							endtime: `${endStr}T00:00:00Z`,
+							parameters: 'tmin,tmax',
+						});
+						const res = await fetch(`https://opendata.fmi.fi/wfs?${params}`);
+						if (!res.ok) return { year, sum: 0, days: 0, ongoing: year === thisYear };
+						const xml = await res.text();
+						const data = parseWeatherXml(xml);
+
+						let sat = 0;
+						for (const day of data) {
+							if (day.tmin !== null && day.tmax !== null) {
+								const avg = (day.tmin + day.tmax) / 2;
+								if (avg > 10) sat += avg;
+							}
+						}
+						return { year, sat, ongoing: year === thisYear };
+					}));
+
+					satTbody.innerHTML = results.reverse().map(r => `<tr>
+						<td>${r.year}</td>
+						<td>${Math.round(r.sat)}${r.ongoing ? ' <span class="ongoing">' + ongoingText + '</span>' : ''}</td>
+					</tr>`).join('');
+
+					satLoading.hidden = true;
+					satContent.hidden = false;
+				} catch (e) {
+					console.error('SAT fetch failed:', e);
+					satLoading.hidden = true;
+				}
+			}
+
+			loadSAT();
 		</script>
 	</body>
 </html>
@@ -408,6 +483,20 @@ const lang = 'sv';
 		text-align: center;
 		color: var(--text-muted);
 		padding: 4em 0;
+	}
+	.sat-section {
+		max-width: 860px;
+		margin: 4em auto 0;
+	}
+	.sat-section h2 {
+		margin-bottom: 1em;
+	}
+	.sat-section [hidden] {
+		display: none;
+	}
+	.ongoing {
+		font-size: 0.85em;
+		color: var(--text-muted);
 	}
 	@media (max-width: 720px) {
 		main {

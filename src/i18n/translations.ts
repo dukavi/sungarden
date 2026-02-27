@@ -71,6 +71,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.temp.chart': 'Lämpötila',
 		'weather.month': 'Kuukausi',
 		'weather.nodata': 'Säätietoja ei ole saatavilla.',
+		'weather.sat.title': 'Aktiivisten lämpötilojen summa (SAT)',
+		'weather.sat.year': 'Vuosi',
+		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.ongoing': '(käynnissä)',
+		'weather.sat.method': 'SAT lasketaan summaamalla vuorokauden keskilämpötilat ((min + max) / 2) niiltä päiviltä, joina keskilämpötila ylittää +10 °C. Tämä on viininviljelyn keskeisin lämpötilamittari lajikkeiden valinnassa. Tiedot: Ilmatieteen laitos, avoin data.',
 
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
@@ -137,6 +142,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.temp.chart': 'Temperatur',
 		'weather.month': 'Månad',
 		'weather.nodata': 'Väderdata är inte tillgänglig.',
+		'weather.sat.title': 'Summa av aktiva temperaturer (SAT)',
+		'weather.sat.year': 'År',
+		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.ongoing': '(pågående)',
+		'weather.sat.method': 'SAT beräknas genom att summera dygnsmedeltemperaturer ((min + max) / 2) för dagar då medeltemperaturen överstiger +10 °C. Detta är det viktigaste värmemåttet för val av druvsort inom vinodling. Data: Meteorologiska institutet, öppen data.',
 
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
@@ -203,6 +213,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.temp.chart': 'Temperature',
 		'weather.month': 'Month',
 		'weather.nodata': 'Weather data is not available.',
+		'weather.sat.title': 'Sum of Active Temperatures (SAT)',
+		'weather.sat.year': 'Year',
+		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.ongoing': '(ongoing)',
+		'weather.sat.method': 'SAT is calculated by summing daily mean temperatures ((min + max) / 2) for days when the mean exceeds +10 °C. This is the key heat metric for grape variety selection in viticulture. Data: Finnish Meteorological Institute, open data.',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',
