@@ -13,8 +13,7 @@ const { lang = 'fi' } = Astro.props;
 <header>
 	<div class="header-inner">
 		<a href={getLocalePath(lang, '/')} class="logo">
-			<span class="logo-icon">&#9752;</span>
-			<span class="logo-text">{t(lang, 'site.title')}</span>
+			{t(lang, 'site.title')}
 		</a>
 		<nav>
 			<div class="nav-links">
@@ -25,10 +24,9 @@ const { lang = 'fi' } = Astro.props;
 			<LanguageSwitcher currentLang={lang} />
 		</nav>
 		<button class="menu-toggle" aria-label="Menu">
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<line x1="3" y1="6" x2="21" y2="6"></line>
-				<line x1="3" y1="12" x2="21" y2="12"></line>
-				<line x1="3" y1="18" x2="21" y2="18"></line>
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+				<line x1="4" y1="7" x2="20" y2="7"></line>
+				<line x1="4" y1="17" x2="20" y2="17"></line>
 			</svg>
 		</button>
 	</div>
@@ -44,87 +42,91 @@ const { lang = 'fi' } = Astro.props;
 
 <style>
 	header {
-		background-color: var(--cream);
+		background-color: var(--bg);
 		border-bottom: 1px solid var(--border);
 		position: sticky;
 		top: 0;
 		z-index: 100;
 	}
 	.header-inner {
-		max-width: 1100px;
+		max-width: 1200px;
 		margin: 0 auto;
-		padding: 0 1.5em;
+		padding: 0 2em;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 4em;
+		height: 4.5em;
 	}
 	.logo {
 		text-decoration: none;
-		color: var(--green-dark);
-		display: flex;
-		align-items: center;
-		gap: 0.4em;
+		color: var(--text);
+		font-family: 'Cormorant Garamond', serif;
+		font-size: 1.3em;
+		font-weight: 500;
+		letter-spacing: 0.02em;
 	}
-	.logo-icon {
-		font-size: 1.4em;
-	}
-	.logo-text {
-		font-family: 'Playfair Display', Georgia, serif;
-		font-size: 1.2em;
-		font-weight: 600;
+	.logo:hover {
+		color: var(--text);
+		opacity: 0.7;
 	}
 	nav {
 		display: flex;
 		align-items: center;
-		gap: 2em;
+		gap: 2.5em;
 	}
 	.nav-links {
 		display: flex;
-		gap: 1.5em;
+		gap: 2em;
 	}
 	.nav-links a {
 		text-decoration: none;
-		color: var(--brown);
-		font-size: 0.95em;
+		color: var(--text);
+		font-size: 0.75em;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		font-weight: 500;
 		padding: 0.25em 0;
-		border-bottom: 2px solid transparent;
-		transition: border-color 0.2s ease, color 0.2s ease;
+		border-bottom: 1px solid transparent;
+		transition: border-color 0.3s ease, opacity 0.3s ease;
 	}
 	.nav-links a:hover {
-		color: var(--green);
-		border-bottom-color: var(--green);
+		color: var(--text);
+		border-bottom-color: var(--text);
+		opacity: 0.7;
 	}
 	.menu-toggle {
 		display: none;
 		background: none;
 		border: none;
 		cursor: pointer;
-		color: var(--brown);
+		color: var(--text);
 		padding: 0.5em;
 	}
 	@media (max-width: 720px) {
+		.header-inner {
+			padding: 0 1.5em;
+		}
 		.menu-toggle {
 			display: block;
 		}
 		nav {
 			display: none;
 			position: absolute;
-			top: 4em;
+			top: 4.5em;
 			left: 0;
 			right: 0;
-			background: var(--cream);
+			background: var(--bg);
 			border-bottom: 1px solid var(--border);
 			flex-direction: column;
-			padding: 1em 1.5em;
-			gap: 1em;
+			padding: 1.5em 2em;
+			gap: 1.5em;
 		}
 		nav.open {
 			display: flex;
 		}
 		.nav-links {
 			flex-direction: column;
-			gap: 0.75em;
+			gap: 1em;
 		}
 	}
 </style>

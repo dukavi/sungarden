@@ -23,24 +23,28 @@ const alternates = getAlternateUrls(Astro.url.pathname);
 <style>
 	.lang-switcher {
 		display: flex;
-		gap: 0.5em;
+		gap: 0.4em;
 		align-items: center;
-		font-size: 0.85em;
+		font-size: 0.7em;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
 	}
 	.lang-switcher > *:not(:last-child)::after {
-		content: '|';
-		margin-left: 0.5em;
-		color: var(--border);
+		content: '/';
+		margin-left: 0.4em;
+		color: var(--text-muted);
+		opacity: 0.4;
 	}
 	.lang-current {
 		font-weight: 600;
-		color: var(--green-dark);
+		color: var(--text);
 	}
 	.lang-link {
 		text-decoration: none;
-		color: var(--brown-light);
+		color: var(--text-muted);
+		transition: color 0.2s ease;
 	}
 	.lang-link:hover {
-		color: var(--green);
+		color: var(--text);
 	}
 </style>

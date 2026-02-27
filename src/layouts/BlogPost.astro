@@ -16,7 +16,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<BaseHead title={`${title} — Aurinkopuutarha`} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
 			}
@@ -26,39 +26,49 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
-				border-radius: 0;
-				max-height: 400px;
+				max-height: 500px;
 				width: 100%;
 				object-fit: cover;
 			}
 			.prose {
 				width: 720px;
-				max-width: calc(100% - 2em);
+				max-width: calc(100% - 3em);
 				margin: auto;
-				padding: 1.5em 1em;
-				color: var(--brown);
+				padding: 3em 0;
+				color: var(--text);
 			}
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+				margin-bottom: 1.5em;
+				padding: 1.5em 0;
 				text-align: center;
 				line-height: 1;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
-				color: var(--green-dark);
 			}
 			.date {
 				margin-bottom: 0.5em;
-				color: var(--brown-light);
+				color: var(--text-muted);
+				font-size: 0.8em;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
 			}
 			.last-updated-on {
 				font-style: italic;
+				font-size: 0.9em;
 			}
 			.back-link {
 				display: inline-block;
-				margin: 1em 0 0;
-				font-size: 0.9em;
+				margin: 1.5em 0 0;
+				font-size: 0.8em;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				text-decoration: none;
+				color: var(--text-muted);
+				transition: color 0.2s ease;
+			}
+			.back-link:hover {
+				color: var(--text);
 			}
 		</style>
 	</head>
