@@ -1,0 +1,46 @@
+---
+import { languages, type Lang } from '../i18n/translations';
+import { getAlternateUrls } from '../i18n/utils';
+
+interface Props {
+	currentLang: Lang;
+}
+
+const { currentLang } = Astro.props;
+const alternates = getAlternateUrls(Astro.url.pathname);
+---
+
+<div class="lang-switcher">
+	{alternates.map(({ lang, href }) => (
+		lang === currentLang ? (
+			<span class="lang-current">{languages[lang]}</span>
+		) : (
+			<a href={href} class="lang-link">{languages[lang]}</a>
+		)
+	))}
+</div>
+
+<style>
+	.lang-switcher {
+		display: flex;
+		gap: 0.5em;
+		align-items: center;
+		font-size: 0.85em;
+	}
+	.lang-switcher > *:not(:last-child)::after {
+		content: '|';
+		margin-left: 0.5em;
+		color: var(--border);
+	}
+	.lang-current {
+		font-weight: 600;
+		color: var(--green-dark);
+	}
+	.lang-link {
+		text-decoration: none;
+		color: var(--brown-light);
+	}
+	.lang-link:hover {
+		color: var(--green);
+	}
+</style>

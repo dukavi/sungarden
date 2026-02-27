@@ -1,0 +1,55 @@
+---
+import type { Lang } from '../i18n/translations';
+import { t } from '../i18n/utils';
+
+interface Props {
+	lang?: Lang;
+}
+
+const { lang = 'fi' } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<div class="footer-inner">
+		<div class="footer-brand">
+			<span class="footer-logo">&#9752; {t(lang, 'site.title')}</span>
+			<p class="footer-address">{t(lang, 'location.address')}</p>
+		</div>
+		<div class="footer-copy">
+			&copy; {year} Mustion Hedelmät. {t(lang, 'footer.rights')}
+		</div>
+	</div>
+</footer>
+
+<style>
+	footer {
+		background-color: var(--footer-bg);
+		color: var(--footer-text);
+		padding: 3em 1.5em;
+		margin-top: 2em;
+	}
+	.footer-inner {
+		max-width: 1100px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.5em;
+		text-align: center;
+	}
+	.footer-logo {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.2em;
+		font-weight: 600;
+	}
+	.footer-address {
+		margin: 0.5em 0 0;
+		font-size: 0.9em;
+		opacity: 0.8;
+	}
+	.footer-copy {
+		font-size: 0.85em;
+		opacity: 0.7;
+	}
+</style>

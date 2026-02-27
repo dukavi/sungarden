@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t } from '../i18n/utils';
+import aboutImage from '../images/20241006_134642.jpg';
+import orchardImage from '../images/20250907_153530.jpg';
+
+const lang = 'fi';
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t(lang, 'about.title')} — ${t(lang, 'site.title')}`} description={t(lang, 'about.intro')} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<div class="container">
+				<div class="page-header">
+					<h1>{t(lang, 'about.title')}</h1>
+					<p class="intro">{t(lang, 'about.intro')}</p>
+				</div>
+
+				<div class="hero-img-wrapper">
+					<Image src={aboutImage} alt="Aurinkopuutarha" width={1100} height={450} class="page-hero" />
+				</div>
+
+				<div class="content-section">
+					<h2>{t(lang, 'about.story.title')}</h2>
+					<p>{t(lang, 'about.story.text')}</p>
+				</div>
+
+				<div class="content-section with-image">
+					<div>
+						<h2>{t(lang, 'about.orchard.title')}</h2>
+						<p>{t(lang, 'about.orchard.text')}</p>
+					</div>
+					<Image src={orchardImage} alt="Omenatarha" width={480} height={320} />
+				</div>
+
+				<div class="content-section">
+					<h2>{t(lang, 'location.title')}</h2>
+					<p>{t(lang, 'location.text')}</p>
+					<p class="address">{t(lang, 'location.address')}</p>
+				</div>
+
+				<div class="content-section">
+					<h2>{t(lang, 'about.contact.title')}</h2>
+					<p>info@aurinkopuutarha.fi</p>
+				</div>
+			</div>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	main {
+		padding: 3em 0;
+	}
+	.page-header {
+		text-align: center;
+		margin-bottom: 2em;
+	}
+	.intro {
+		font-size: 1.15em;
+		color: var(--brown-light);
+		max-width: 640px;
+		margin: 0.5em auto 0;
+	}
+	.hero-img-wrapper {
+		margin-bottom: 3em;
+	}
+	.page-hero {
+		width: 100%;
+		height: 400px;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+	.content-section {
+		max-width: 720px;
+		margin: 0 auto 3em;
+	}
+	.content-section.with-image {
+		max-width: 100%;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3em;
+		align-items: center;
+	}
+	.address {
+		font-weight: 600;
+		color: var(--green-dark);
+	}
+	@media (max-width: 720px) {
+		.content-section.with-image {
+			grid-template-columns: 1fr;
+			gap: 1.5em;
+		}
+		.page-hero {
+			height: 250px;
+		}
+	}
+</style>
