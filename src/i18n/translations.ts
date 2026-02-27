@@ -14,6 +14,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.home': 'Etusivu',
 		'nav.about': 'Tietoa meistä',
 		'nav.blog': 'Blogi',
+		'nav.weather': 'Sää',
 
 		// Site
 		'site.title': 'Aurinkotarha Mustio',
@@ -21,7 +22,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Hero
 		'hero.tagline': 'Omenatarha Mustion kylässä',
-		'hero.subtitle': 'Viljelmme omenoita, päärynöitä ja marjoja Raaseporin maisemissa, Mustion Linnan naapurissa. Tervetuloa tutustumaan!',
+		'hero.subtitle': 'Viljelemme pääasiassa omenoita sekä kokeilemme viinirypäleitä, päärynöitä ja luumuja Raaseporin maisemissa, Mustion Linnan naapurissa.',
 		'hero.cta': 'Tutustu tilaan',
 
 		// About section (homepage)
@@ -47,6 +48,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'blog.subtitle': 'Kuulumisia tilalta',
 		'blog.readmore': 'Lue lisää',
 		'blog.latest': 'Viimeisimmät kirjoitukset',
+		'blog.back': 'Takaisin blogiin',
+		'blog.updated': 'Päivitetty',
 
 		// About page
 		'about.title': 'Tietoa meistä',
@@ -57,6 +60,18 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.text': 'Käytämme moderneja intensiiviviljelymenetelmiä: kääpiöperusrunkoja, tiheää istutusta jopa 50 cm välein, tippukastelua, fertigaatiota sekä kevät- ja kesäleikkausta. Jokainen puu muotoillaan kapeaksi 2D-latvukseksi, enintään 40 cm leveäksi, jotta auringonvalo tavoittaa jokaisen hedelmän — näin omenamme saavuttavat täyden makunsa ja syvimmän värinsä. Tämä lähestymistapa vähentää luonnostaan myös kasvinsuojelun tarvetta. Omenoiden lisäksi kokeilemme päärynä-, luumu- ja kriikunalajikkeita sekä ylläpidämme viinirypäleiden koeistutuksia.',
 		'about.contact.title': 'Ota yhteyttä',
 
+		// Weather
+		'weather.title': 'Sää Mustiossa',
+		'weather.subtitle': 'Säähavainnot FMI:n sääasemalta Karjaa Kuusisto.',
+		'weather.date': 'Päivämäärä',
+		'weather.tmin': 'Min °C',
+		'weather.tmax': 'Max °C',
+		'weather.snow': 'Lumi cm',
+		'weather.source': 'Lähde: Ilmatieteen laitos, avoin data.',
+		'weather.temp.chart': 'Lämpötila',
+		'weather.month': 'Kuukausi',
+		'weather.nodata': 'Säätietoja ei ole saatavilla.',
+
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
 	},
@@ -65,6 +80,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.home': 'Hem',
 		'nav.about': 'Om oss',
 		'nav.blog': 'Blogg',
+		'nav.weather': 'Väder',
 
 		// Site
 		'site.title': 'Aurinkotarha Svartå',
@@ -72,7 +88,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Hero
 		'hero.tagline': 'Äppelodling i byn Svartå',
-		'hero.subtitle': 'Vi odlar äpplen, päron och bär i Raseborgs landskap, intill Svartå Slott. Välkommen!',
+		'hero.subtitle': 'Vi odlar främst äpplen, med provplanteringar av vindruvor, päron och plommon i Raseborgs landskap, intill Svartå Slott.',
 		'hero.cta': 'Utforska gården',
 
 		// About section (homepage)
@@ -98,6 +114,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'blog.subtitle': 'Nyheter från gården',
 		'blog.readmore': 'Läs mer',
 		'blog.latest': 'Senaste inläggen',
+		'blog.back': 'Tillbaka till bloggen',
+		'blog.updated': 'Uppdaterad',
 
 		// About page
 		'about.title': 'Om oss',
@@ -108,6 +126,18 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.text': 'Vi använder moderna intensiva metoder: dvärggrundstammar, tät plantering med så lite som 50 cm mellanrum, droppbevattning, fertigering samt vår- och sommarbeskärning. Varje träd formas till en smal 2D-krona, högst 40 cm bred, så att solljuset når varje frukt — och ger våra äpplen deras fulla smak och djupaste färg. Denna metod minskar naturligt även behovet av växtskydd. Utöver äpplen experimenterar vi med päron-, plommon- och körsbärsplommonsorter samt har provplanteringar av vindruvor.',
 		'about.contact.title': 'Kontakta oss',
 
+		// Weather
+		'weather.title': 'Väder i Svartå',
+		'weather.subtitle': 'Väderobservationer från FMI-stationen Karis Kuusisto.',
+		'weather.date': 'Datum',
+		'weather.tmin': 'Min °C',
+		'weather.tmax': 'Max °C',
+		'weather.snow': 'Snö cm',
+		'weather.source': 'Källa: Meteorologiska institutet, öppen data.',
+		'weather.temp.chart': 'Temperatur',
+		'weather.month': 'Månad',
+		'weather.nodata': 'Väderdata är inte tillgänglig.',
+
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
 	},
@@ -116,6 +146,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'nav.home': 'Home',
 		'nav.about': 'About',
 		'nav.blog': 'Blog',
+		'nav.weather': 'Weather',
 
 		// Site
 		'site.title': 'Aurinkotarha Mustio',
@@ -123,7 +154,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Hero
 		'hero.tagline': 'Apple orchard in the village of Mustio',
-		'hero.subtitle': 'We grow apples, pears and berries in the Raasepori countryside, next to the historic Svartå Manor. Welcome!',
+		'hero.subtitle': 'We grow mainly apples, with trial plantings of grapes, pears and plums in the Raasepori countryside, next to the historic Svartå Manor.',
 		'hero.cta': 'Explore the farm',
 
 		// About section (homepage)
@@ -149,6 +180,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'blog.subtitle': 'News from the farm',
 		'blog.readmore': 'Read more',
 		'blog.latest': 'Latest posts',
+		'blog.back': 'Back to blog',
+		'blog.updated': 'Updated',
 
 		// About page
 		'about.title': 'About us',
@@ -158,6 +191,18 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.title': 'Our orchard',
 		'about.orchard.text': 'We use modern intensive methods: dwarf rootstocks, high-density planting as close as 50 cm apart, drip irrigation, fertigation, and careful spring and summer pruning. Each tree is trained into a narrow 2D canopy, no wider than 40 cm, so that sunlight reaches every fruit — giving our apples their fullest flavour and deepest colour. This approach also naturally reduces the need for crop protection. Beyond apples, we experiment with pear, plum and cherry plum varieties, and maintain trial plantings of grape.',
 		'about.contact.title': 'Contact us',
+
+		// Weather
+		'weather.title': 'Weather in Mustio',
+		'weather.subtitle': 'Weather observations from FMI station Karjaa Kuusisto.',
+		'weather.date': 'Date',
+		'weather.tmin': 'Min °C',
+		'weather.tmax': 'Max °C',
+		'weather.snow': 'Snow cm',
+		'weather.source': 'Source: Finnish Meteorological Institute, open data.',
+		'weather.temp.chart': 'Temperature',
+		'weather.month': 'Month',
+		'weather.nodata': 'Weather data is not available.',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',

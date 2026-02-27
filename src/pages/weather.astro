@@ -1,0 +1,422 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t } from '../i18n/utils';
+
+const lang = 'fi';
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t(lang, 'weather.title')} — ${t(lang, 'site.title')}`} description={t(lang, 'weather.subtitle')} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<div class="container">
+				<div class="page-header">
+					<h1>{t(lang, 'weather.title')}</h1>
+					<p class="subtitle">{t(lang, 'weather.subtitle')}</p>
+				</div>
+
+				<div class="month-picker-wrapper">
+					<label>{t(lang, 'weather.month')}</label>
+					<select id="year-picker"></select>
+					<select id="month-picker"></select>
+				</div>
+
+				<div id="weather-loading" class="loading">
+					<div class="spinner"></div>
+				</div>
+
+				<div id="weather-content" hidden>
+					<div class="chart-section">
+						<h2>{t(lang, 'weather.temp.chart')}</h2>
+						<canvas id="temp-chart"></canvas>
+					</div>
+
+					<div class="table-wrapper">
+						<table>
+							<thead>
+								<tr>
+									<th>{t(lang, 'weather.date')}</th>
+									<th>{t(lang, 'weather.tmin')}</th>
+									<th>{t(lang, 'weather.tmax')}</th>
+									<th>{t(lang, 'weather.snow')}</th>
+								</tr>
+							</thead>
+							<tbody id="weather-tbody"></tbody>
+						</table>
+					</div>
+
+					<p class="source">{t(lang, 'weather.source')}</p>
+				</div>
+
+				<p id="weather-error" class="nodata" hidden>{t(lang, 'weather.nodata')}</p>
+			</div>
+		</main>
+		<Footer lang={lang} />
+
+		<script>
+			async function loadWeather(month?: string) {
+				const loading = document.getElementById('weather-loading')!;
+				const content = document.getElementById('weather-content')!;
+				const error = document.getElementById('weather-error')!;
+
+				loading.hidden = false;
+				content.hidden = true;
+				error.hidden = true;
+
+				try {
+					const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+					let startStr: string;
+					let endStr: string;
+
+					if (month) {
+						const [y, m] = month.split('-').map(Number);
+						const start = new Date(y, m - 1, 1);
+						const lastDay = new Date(y, m, 0);
+						const today = new Date();
+						const end = lastDay > today ? today : lastDay;
+						startStr = fmt(start);
+						endStr = fmt(end);
+					} else {
+						const end = new Date();
+						const start = new Date();
+						start.setDate(end.getDate() - 30);
+						startStr = fmt(start);
+						endStr = fmt(end);
+					}
+
+					const params = new URLSearchParams({
+						service: 'WFS',
+						version: '2.0.0',
+						request: 'getFeature',
+						storedquery_id: 'fmi::observations::weather::daily::simple',
+						place: 'mustio',
+						starttime: `${startStr}T00:00:00Z`,
+						endtime: `${endStr}T00:00:00Z`,
+						parameters: 'tmin,tmax,snow',
+					});
+
+					const res = await fetch(`https://opendata.fmi.fi/wfs?${params}`);
+					if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+					const xml = await res.text();
+					const data = parseWeatherXml(xml);
+
+					if (data.length === 0) {
+						loading.hidden = true;
+						error.hidden = false;
+						return;
+					}
+
+					renderTable(data);
+					loading.hidden = true;
+					content.hidden = false;
+					renderChart(data);
+				} catch (e) {
+					console.error('Weather fetch failed:', e);
+					loading.hidden = true;
+					error.hidden = false;
+				}
+			}
+
+			interface WeatherDay {
+				date: string;
+				tmin: number | null;
+				tmax: number | null;
+				snow: number | null;
+			}
+
+			function parseWeatherXml(xml: string): WeatherDay[] {
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(xml, 'text/xml');
+				const elements = doc.getElementsByTagName('BsWfs:BsWfsElement');
+				const map = new Map<string, WeatherDay>();
+
+				for (const el of elements) {
+					const time = el.getElementsByTagName('BsWfs:Time')[0]?.textContent?.trim();
+					const name = el.getElementsByTagName('BsWfs:ParameterName')[0]?.textContent?.trim();
+					const value = el.getElementsByTagName('BsWfs:ParameterValue')[0]?.textContent?.trim();
+					if (!time || !name) continue;
+
+					const date = time.split('T')[0];
+					if (!map.has(date)) map.set(date, { date, tmin: null, tmax: null, snow: null });
+					const day = map.get(date)!;
+					const num = value ? parseFloat(value) : NaN;
+
+					if (name === 'tmin' && !isNaN(num)) day.tmin = num;
+					if (name === 'tmax' && !isNaN(num)) day.tmax = num;
+					if (name === 'snow' && !isNaN(num)) day.snow = num;
+				}
+
+				return [...map.values()].sort((a, b) => a.date.localeCompare(b.date));
+			}
+
+			function renderTable(data: WeatherDay[]) {
+				const tbody = document.getElementById('weather-tbody')!;
+				tbody.innerHTML = data.map(day => `<tr>
+					<td>${day.date}</td>
+					<td class="${day.tmin !== null && day.tmin < 0 ? 'negative' : ''}">${day.tmin !== null ? day.tmin.toFixed(1) : '—'}</td>
+					<td class="${day.tmax !== null && day.tmax < 0 ? 'negative' : ''}">${day.tmax !== null ? day.tmax.toFixed(1) : '—'}</td>
+					<td>${day.snow !== null ? day.snow : '—'}</td>
+				</tr>`).join('');
+			}
+
+			function renderChart(data: WeatherDay[]) {
+				const canvas = document.getElementById('temp-chart') as HTMLCanvasElement;
+				const ctx = canvas.getContext('2d')!;
+
+				const dpr = window.devicePixelRatio || 1;
+				const rect = canvas.getBoundingClientRect();
+				canvas.width = rect.width * dpr;
+				canvas.height = rect.height * dpr;
+				ctx.scale(dpr, dpr);
+				const W = rect.width;
+				const H = rect.height;
+
+				const pad = { top: 20, right: 20, bottom: 50, left: 45 };
+				const chartW = W - pad.left - pad.right;
+				const chartH = H - pad.top - pad.bottom;
+
+				const temps = data.flatMap(d => [d.tmin, d.tmax].filter(v => v !== null)) as number[];
+				if (temps.length === 0) return;
+				const minT = Math.floor(Math.min(...temps) / 5) * 5 - 5;
+				const maxT = Math.ceil(Math.max(...temps) / 5) * 5 + 5;
+
+				const style = getComputedStyle(document.documentElement);
+				const textColor = style.getPropertyValue('--text-muted').trim() || '#6b6b6b';
+				const borderColor = style.getPropertyValue('--border').trim() || '#ddd8c8';
+				const accentColor = style.getPropertyValue('--accent').trim() || '#7a8c50';
+
+				function yPos(v: number) {
+					return pad.top + chartH - ((v - minT) / (maxT - minT)) * chartH;
+				}
+
+				// Grid
+				ctx.strokeStyle = borderColor;
+				ctx.lineWidth = 0.5;
+				ctx.font = '11px "DM Sans", sans-serif';
+				ctx.fillStyle = textColor;
+				ctx.textAlign = 'right';
+				for (let t = minT; t <= maxT; t += 5) {
+					const y = yPos(t);
+					ctx.beginPath();
+					ctx.moveTo(pad.left, y);
+					ctx.lineTo(W - pad.right, y);
+					ctx.stroke();
+					ctx.fillText(`${t}°`, pad.left - 6, y + 4);
+				}
+
+				// Zero line
+				if (minT < 0 && maxT > 0) {
+					ctx.strokeStyle = textColor;
+					ctx.lineWidth = 1;
+					ctx.setLineDash([4, 4]);
+					const y0 = yPos(0);
+					ctx.beginPath();
+					ctx.moveTo(pad.left, y0);
+					ctx.lineTo(W - pad.right, y0);
+					ctx.stroke();
+					ctx.setLineDash([]);
+				}
+
+				const barW = Math.max(2, chartW / data.length - 2);
+
+				// Bars
+				data.forEach((d, i) => {
+					if (d.tmin === null || d.tmax === null) return;
+					const x = pad.left + (i / data.length) * chartW + (chartW / data.length - barW) / 2;
+					const yTop = yPos(d.tmax);
+					const yBot = yPos(d.tmin);
+					ctx.fillStyle = accentColor;
+					ctx.globalAlpha = 0.6;
+					ctx.fillRect(x, yTop, barW, yBot - yTop);
+					ctx.globalAlpha = 1;
+				});
+
+				// Lines
+				function drawLine(key: 'tmin' | 'tmax', color: string) {
+					ctx.strokeStyle = color;
+					ctx.lineWidth = 1.5;
+					ctx.beginPath();
+					let started = false;
+					data.forEach((d, i) => {
+						if (d[key] === null) { started = false; return; }
+						const x = pad.left + (i + 0.5) / data.length * chartW;
+						const y = yPos(d[key]!);
+						if (!started) { ctx.moveTo(x, y); started = true; }
+						else ctx.lineTo(x, y);
+					});
+					ctx.stroke();
+				}
+
+				drawLine('tmax', '#c0392b');
+				drawLine('tmin', '#2980b9');
+
+				// X-axis
+				ctx.fillStyle = textColor;
+				ctx.textAlign = 'center';
+				ctx.font = '10px "DM Sans", sans-serif';
+				const step = Math.ceil(data.length / 10);
+				data.forEach((d, i) => {
+					if (i % step !== 0) return;
+					const x = pad.left + (i + 0.5) / data.length * chartW;
+					const label = d.date.slice(5);
+					ctx.save();
+					ctx.translate(x, H - pad.bottom + 14);
+					ctx.rotate(-Math.PI / 4);
+					ctx.fillText(label, 0, 0);
+					ctx.restore();
+				});
+			}
+
+			const yearPicker = document.getElementById('year-picker') as HTMLSelectElement;
+			const monthPicker = document.getElementById('month-picker') as HTMLSelectElement;
+			const lang = document.documentElement.lang;
+			const now = new Date();
+			const currentYear = now.getFullYear();
+			const currentMonth = now.getMonth() + 1;
+
+			for (let y = currentYear; y >= 2020; y--) {
+				const opt = document.createElement('option');
+				opt.value = String(y);
+				opt.textContent = String(y);
+				yearPicker.appendChild(opt);
+			}
+			yearPicker.value = String(currentYear);
+
+			const monthFmt = new Intl.DateTimeFormat(lang, { month: 'long' });
+			for (let m = 1; m <= 12; m++) {
+				const opt = document.createElement('option');
+				opt.value = String(m).padStart(2, '0');
+				const name = monthFmt.format(new Date(2000, m - 1, 1));
+				opt.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+				monthPicker.appendChild(opt);
+			}
+			monthPicker.value = String(currentMonth).padStart(2, '0');
+
+			function getSelectedMonth() {
+				return `${yearPicker.value}-${monthPicker.value}`;
+			}
+
+			yearPicker.addEventListener('change', () => loadWeather(getSelectedMonth()));
+			monthPicker.addEventListener('change', () => loadWeather(getSelectedMonth()));
+
+			loadWeather(getSelectedMonth());
+		</script>
+	</body>
+</html>
+
+<style>
+	main {
+		padding: 6em 0;
+	}
+	.page-header {
+		text-align: center;
+		margin-bottom: 3em;
+	}
+	.page-header h1 {
+		margin-bottom: 0.4em;
+	}
+	.subtitle {
+		color: var(--text-muted);
+		font-size: 1.05em;
+	}
+	.month-picker-wrapper {
+		max-width: 860px;
+		margin: 0 auto 2em;
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+	}
+	.month-picker-wrapper label {
+		font-size: 0.9em;
+		color: var(--text-muted);
+	}
+	.month-picker-wrapper select {
+		font-family: inherit;
+		font-size: 0.9em;
+		padding: 0.4em 0.6em;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		background: var(--card-bg);
+		color: inherit;
+	}
+	.loading {
+		display: flex;
+		justify-content: center;
+		padding: 4em 0;
+	}
+	.spinner {
+		width: 32px;
+		height: 32px;
+		border: 2px solid var(--border);
+		border-top-color: var(--accent);
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+	.loading[hidden] {
+		display: none;
+	}
+	.chart-section {
+		max-width: 860px;
+		margin: 0 auto 1.5em;
+	}
+	.chart-section h2 {
+		margin-bottom: 1em;
+	}
+	canvas {
+		width: 100%;
+		height: 300px;
+		display: block;
+	}
+	.table-wrapper {
+		max-width: 860px;
+		margin: 0 auto 2em;
+		overflow-x: auto;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9em;
+	}
+	th, td {
+		padding: 0.6em 1em;
+		text-align: left;
+		border-bottom: 1px solid var(--border);
+	}
+	th {
+		font-weight: 600;
+		font-size: 0.75em;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--text-muted);
+	}
+	td.negative {
+		color: #2980b9;
+	}
+	.source {
+		max-width: 860px;
+		margin: 0 auto;
+		font-size: 0.85em;
+		color: var(--text-muted);
+	}
+	.nodata {
+		text-align: center;
+		color: var(--text-muted);
+		padding: 4em 0;
+	}
+	@media (max-width: 720px) {
+		main {
+			padding: 3em 0;
+		}
+	}
+</style>

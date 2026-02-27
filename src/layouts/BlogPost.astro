@@ -5,15 +5,18 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import type { Lang } from '../i18n/translations';
+import { getLangFromUrl, t, getLocalePath } from '../i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
 ---
 
-<html lang="fi">
+<html lang={lang}>
 	<head>
-		<BaseHead title={`${title} — Aurinkotarha`} description={description} />
+		<BaseHead title={`${title} — Aurinkotarha`} description={description} lang={lang} />
 		<style>
 			main {
 				width: 100%;
@@ -74,7 +77,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	</head>
 
 	<body>
-		<Header lang="fi" />
+		<Header lang={lang} />
 		<main>
 			<article>
 				<div class="hero-image">
@@ -86,7 +89,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							<FormattedDate date={pubDate} />
 							{updatedDate && (
 								<div class="last-updated-on">
-									Päivitetty <FormattedDate date={updatedDate} />
+									{t(lang, 'blog.updated')} <FormattedDate date={updatedDate} />
 								</div>
 							)}
 						</div>
@@ -95,10 +98,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					</div>
 					<slot />
 					<hr />
-					<a href="/blog" class="back-link">&larr; Takaisin blogiin</a>
+					<a href={getLocalePath(lang, '/blog')} class="back-link">&larr; {t(lang, 'blog.back')}</a>
 				</div>
 			</article>
 		</main>
-		<Footer lang="fi" />
+		<Footer lang={lang} />
 	</body>
 </html>
