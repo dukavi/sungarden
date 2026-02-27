@@ -17,16 +17,16 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Site
 		'site.title': 'Aurinkotarha Mustio',
-		'site.description': 'Moderni omenatarha Mustiossa, Raaseporissa. Kaksi hehtaaria tarkasti viljeltyjä omenoita, päärynöitä ja viinirypäleitä historiallisen Mustion Linnan naapurissa.',
+		'site.description': 'Omenatarha Mustion kylässä, Raaseporissa. Omenoita, päärynöitä ja marjoja Mustion Linnan naapurissa.',
 
 		// Hero
-		'hero.tagline': 'Tarkasti viljeltyä, auringossa kypsytettyä',
-		'hero.subtitle': 'Moderni omenatarha Mustion kylässä, Raaseporissa. Perustettu 2024.',
+		'hero.tagline': 'Omenatarha Mustion kylässä',
+		'hero.subtitle': 'Viljelmme omenoita, päärynöitä ja marjoja Raaseporin maisemissa, Mustion Linnan naapurissa. Tervetuloa tutustumaan!',
 		'hero.cta': 'Tutustu tilaan',
 
 		// About section (homepage)
-		'home.about.title': 'Tila',
-		'home.about.text': 'Kaksi hehtaaria maata Mustion kylässä, viljelty tarkasti ja huolella. Käytämme moderneja intensiiviviljelymenetelmiä — kääpiöperusrunkoja, tiheää istutusta, tippukastelua ja fertigaatiota. Jokainen puu muotoillaan kapeaksi 2D-latvukseksi, jotta auringonvalo tavoittaa jokaisen hedelmän.',
+		'home.about.title': 'Tila Mustiossa',
+		'home.about.text': 'Tilamme sijaitsee Mustion kylässä, Raaseporin kauniissa maisemissa — aivan historiallisen Mustion Linnan naapurissa. Viljelemme kahta hehtaaria omenoita, päärynöitä ja marjoja modernein menetelmin.',
 
 		// Products
 		'products.title': 'Tuotteemme',
@@ -39,8 +39,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Location
 		'location.title': 'Sijainti',
-		'location.text': 'Tilaamme löydät Mustiosta, Raaseporin kunnasta — historiallisen Mustion Linnan naapurista, Länsi-Uudenmaan kauniista maisemista.',
-		'location.address': 'Mustio, Raasepori',
+		'location.text': 'Tilaamme löydät Mustiosta, Raaseporin kunnasta — historiallisen Mustion Linnan naapurista, Länsi-Uudenmaan kauniista maisemista. Noin tunnin ajomatka Helsingistä.',
+		'location.address': 'Trycksbackavägen 24, 10360 Mustio',
 
 		// Blog
 		'blog.title': 'Blogi',
@@ -68,16 +68,16 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Site
 		'site.title': 'Aurinkotarha Svartå',
-		'site.description': 'Modern äppelodling i Svartå, Raseborg. Två hektar noggrant odlade äpplen, päron och vindruvor intill det historiska Svartå Slott.',
+		'site.description': 'Äppelodling i byn Svartå, Raseborg. Äpplen, päron och bär intill Svartå Slott.',
 
 		// Hero
-		'hero.tagline': 'Noggrant odlat, solmognat',
-		'hero.subtitle': 'Modern äppelodling i byn Svartå, Raseborg. Grundad 2024.',
+		'hero.tagline': 'Äppelodling i byn Svartå',
+		'hero.subtitle': 'Vi odlar äpplen, päron och bär i Raseborgs landskap, intill Svartå Slott. Välkommen!',
 		'hero.cta': 'Utforska gården',
 
 		// About section (homepage)
-		'home.about.title': 'Gården',
-		'home.about.text': 'Två hektar mark i byn Svartå, odlad med precision och omsorg. Vi använder moderna intensiva metoder — dvärggrundstammar, tät plantering, droppbevattning och fertigering. Varje träd formas till en smal 2D-krona, så att solljuset når varje frukt.',
+		'home.about.title': 'Gården i Svartå',
+		'home.about.text': 'Vår gård ligger i byn Svartå, i Raseborgs vackra landskap — alldeles intill det historiska Svartå Slott. Vi odlar två hektar äpplen, päron och bär med moderna metoder.',
 
 		// Products
 		'products.title': 'Våra produkter',
@@ -90,8 +90,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Location
 		'location.title': 'Läge',
-		'location.text': 'Vår gård ligger i Svartå, Raseborg — intill det historiska Svartå Slott, i Västra Nylands vackra landskap.',
-		'location.address': 'Svartå, Raseborg',
+		'location.text': 'Vår gård ligger i Svartå, Raseborg — intill det historiska Svartå Slott, i Västra Nylands vackra landskap. Cirka en timmes körväg från Helsingfors.',
+		'location.address': 'Trycksbackavägen 24, 10360 Svartå',
 
 		// Blog
 		'blog.title': 'Blogg',
@@ -119,16 +119,16 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Site
 		'site.title': 'Aurinkotarha Mustio',
-		'site.description': 'A modern apple orchard in Mustio, Raasepori. Two hectares of precisely cultivated apples, pears and grapes next to the historic Svartå Manor.',
+		'site.description': 'Apple orchard in the village of Mustio, Raasepori. Apples, pears and berries next to the historic Svartå Manor.',
 
 		// Hero
-		'hero.tagline': 'Precisely grown, sun-ripened',
-		'hero.subtitle': 'A modern apple orchard in the village of Mustio, Raasepori. Founded 2024.',
+		'hero.tagline': 'Apple orchard in the village of Mustio',
+		'hero.subtitle': 'We grow apples, pears and berries in the Raasepori countryside, next to the historic Svartå Manor. Welcome!',
 		'hero.cta': 'Explore the farm',
 
 		// About section (homepage)
-		'home.about.title': 'The farm',
-		'home.about.text': 'Two hectares of land in the village of Mustio, cultivated with precision and care. We use modern intensive methods — dwarf rootstocks, high-density planting, drip irrigation and fertigation. Each tree is trained into a narrow 2D canopy, so that sunlight reaches every fruit.',
+		'home.about.title': 'The farm in Mustio',
+		'home.about.text': 'Our farm is located in the village of Mustio, in the beautiful Raasepori countryside — right next to the historic Svartå Manor. We grow two hectares of apples, pears and berries using modern methods.',
 
 		// Products
 		'products.title': 'Our products',
@@ -141,8 +141,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Location
 		'location.title': 'Location',
-		'location.text': 'Our farm lies in Mustio, Raasepori — next to the historic Svartå Manor, in the beautiful landscape of Western Uusimaa.',
-		'location.address': 'Mustio, Raasepori',
+		'location.text': 'Our farm lies in Mustio, Raasepori — next to the historic Svartå Manor, in the beautiful landscape of Western Uusimaa. About an hour\'s drive from Helsinki.',
+		'location.address': 'Trycksbackavägen 24, 10360 Svartå',
 
 		// Blog
 		'blog.title': 'Blog',
