@@ -8,7 +8,12 @@
       "Bash(git init:*)",
       "Bash(git commit:*)",
       "Bash(git add:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(git config:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)"
     ]
   }
 }
