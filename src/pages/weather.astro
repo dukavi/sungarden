@@ -44,6 +44,7 @@ const lang = 'fi';
 									<th>{t(lang, 'weather.date')}</th>
 									<th>{t(lang, 'weather.tmin')}</th>
 									<th>{t(lang, 'weather.tmax')}</th>
+									<th>{t(lang, 'weather.rain')}</th>
 									<th>{t(lang, 'weather.snow')}</th>
 								</tr>
 							</thead>
@@ -130,10 +131,10 @@ const lang = 'fi';
 						version: '2.0.0',
 						request: 'getFeature',
 						storedquery_id: 'fmi::observations::weather::daily::simple',
-						place: 'lohja',
+						place: 'mustio',
 						starttime: `${startStr}T00:00:00Z`,
 						endtime: `${endStr}T00:00:00Z`,
-						parameters: 'tmin,tmax,snow',
+						parameters: 'tmin,tmax,rrday,snow',
 					});
 
 					const res = await fetch(`https://opendata.fmi.fi/wfs?${params}`);
@@ -163,6 +164,7 @@ const lang = 'fi';
 				date: string;
 				tmin: number | null;
 				tmax: number | null;
+				rain: number | null;
 				snow: number | null;
 			}
 
@@ -179,12 +181,13 @@ const lang = 'fi';
 					if (!time || !name) continue;
 
 					const date = time.split('T')[0];
-					if (!map.has(date)) map.set(date, { date, tmin: null, tmax: null, snow: null });
+					if (!map.has(date)) map.set(date, { date, tmin: null, tmax: null, rain: null, snow: null });
 					const day = map.get(date)!;
 					const num = value ? parseFloat(value) : NaN;
 
 					if (name === 'tmin' && !isNaN(num)) day.tmin = num;
 					if (name === 'tmax' && !isNaN(num)) day.tmax = num;
+					if (name === 'rrday' && !isNaN(num)) day.rain = num;
 					if (name === 'snow' && !isNaN(num)) day.snow = num;
 				}
 
@@ -197,6 +200,7 @@ const lang = 'fi';
 					<td>${day.date}</td>
 					<td class="${day.tmin !== null && day.tmin < 0 ? 'negative' : ''}">${day.tmin !== null ? day.tmin.toFixed(1) : '—'}</td>
 					<td class="${day.tmax !== null && day.tmax < 0 ? 'negative' : ''}">${day.tmax !== null ? day.tmax.toFixed(1) : '—'}</td>
+					<td>${day.rain !== null ? day.rain.toFixed(1) : '—'}</td>
 					<td>${day.snow !== null ? day.snow : '—'}</td>
 				</tr>`).join('');
 			}
@@ -364,7 +368,7 @@ const lang = 'fi';
 							version: '2.0.0',
 							request: 'getFeature',
 							storedquery_id: 'fmi::observations::weather::daily::simple',
-							place: 'lohja',
+							place: 'mustio',
 							starttime: `${startStr}T00:00:00Z`,
 							endtime: `${endStr}T00:00:00Z`,
 							parameters: 'tmin,tmax',

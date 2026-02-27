@@ -62,10 +62,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Sää Mustiossa',
-		'weather.subtitle': 'Säähavainnot FMI:n sääasemalta Lohja.',
+		'weather.subtitle': 'Säähavainnot FMI:n sääasemalta Karjaa Kuusisto.',
 		'weather.date': 'Päivämäärä',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
+		'weather.rain': 'Sade mm',
 		'weather.snow': 'Lumi cm',
 		'weather.source': 'Lähde: Ilmatieteen laitos, avoin data.',
 		'weather.temp.chart': 'Lämpötila',
@@ -144,10 +145,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Väder i Svartå',
-		'weather.subtitle': 'Väderobservationer från FMI-stationen Lojo.',
+		'weather.subtitle': 'Väderobservationer från FMI-stationen Karis Kuusisto.',
 		'weather.date': 'Datum',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
+		'weather.rain': 'Regn mm',
 		'weather.snow': 'Snö cm',
 		'weather.source': 'Källa: Meteorologiska institutet, öppen data.',
 		'weather.temp.chart': 'Temperatur',
@@ -226,10 +228,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Weather in Mustio',
-		'weather.subtitle': 'Weather observations from FMI station Lohja.',
+		'weather.subtitle': 'Weather observations from FMI station Karjaa Kuusisto.',
 		'weather.date': 'Date',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
+		'weather.rain': 'Rain mm',
 		'weather.snow': 'Snow cm',
 		'weather.source': 'Source: Finnish Meteorological Institute, open data.',
 		'weather.temp.chart': 'Temperature',
