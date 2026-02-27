@@ -62,7 +62,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Sää Mustiossa',
-		'weather.subtitle': 'Säähavainnot FMI:n sääasemalta Karjaa Kuusisto.',
+		'weather.subtitle': 'Säähavainnot FMI:n sääasemalta Lohja.',
 		'weather.date': 'Päivämäärä',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
@@ -74,8 +74,19 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.title': 'Aktiivisten lämpötilojen summa (SAT)',
 		'weather.sat.year': 'Vuosi',
 		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.lastfrost': 'Kevään viimeinen halla',
+		'weather.sat.firstfrost': 'Syksyn ensimmäinen halla',
 		'weather.sat.ongoing': '(käynnissä)',
-		'weather.sat.method': 'SAT lasketaan summaamalla vuorokauden keskilämpötilat ((min + max) / 2) niiltä päiviltä, joina keskilämpötila ylittää +10 °C. Tämä on viininviljelyn keskeisin lämpötilamittari lajikkeiden valinnassa. Tiedot: Ilmatieteen laitos, avoin data.',
+		'weather.sat.desc': 'SAT on kasvukauden kokonaislämpömäärä: vuorokauden keskilämpötilojen ((min + max) / 2) summa niiltä päiviltä, joina keskilämpötila ylittää +10 °C. Tämä on keskeinen mittari lajikkeiden valinnassa.',
+		'weather.sat.grapes': 'Viinirypäleet',
+		'weather.sat.grapes.desc': 'Viinirypäleet ovat lämpöä vaativa kasvi. Lajikkeen kypsymisaika määrittää vaadittavan SAT-arvon:',
+		'weather.sat.grapes.veryearly': 'Hyvin aikaiset: alle 2500 °C',
+		'weather.sat.grapes.early': 'Aikaiset: 2500–2600 °C',
+		'weather.sat.grapes.earlymid': 'Aikaiskeskimyöhäiset: 2600–2700 °C',
+		'weather.sat.grapes.mid': 'Keskimyöhäiset: 2700–2800 °C',
+		'weather.sat.apples': 'Omenat',
+		'weather.sat.apples.desc': 'Omenapuut ovat kestävämpiä ja vaativat vähemmän lämpöä. Kesälajikkeet pärjäävät matalammilla SAT-arvoilla, myöhäiset lajikkeet vaativat 2500–2600 °C.',
+		'weather.sat.source': 'Tiedot: Ilmatieteen laitos, avoin data.',
 
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
@@ -133,7 +144,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Väder i Svartå',
-		'weather.subtitle': 'Väderobservationer från FMI-stationen Karis Kuusisto.',
+		'weather.subtitle': 'Väderobservationer från FMI-stationen Lojo.',
 		'weather.date': 'Datum',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
@@ -145,8 +156,19 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.title': 'Summa av aktiva temperaturer (SAT)',
 		'weather.sat.year': 'År',
 		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.lastfrost': 'Sista vårfrosten',
+		'weather.sat.firstfrost': 'Första höstfrosten',
 		'weather.sat.ongoing': '(pågående)',
-		'weather.sat.method': 'SAT beräknas genom att summera dygnsmedeltemperaturer ((min + max) / 2) för dagar då medeltemperaturen överstiger +10 °C. Detta är det viktigaste värmemåttet för val av druvsort inom vinodling. Data: Meteorologiska institutet, öppen data.',
+		'weather.sat.desc': 'SAT är den totala värmen under vegetationsperioden: summan av dygnsmedeltemperaturer ((min + max) / 2) för dagar då medeltemperaturen överstiger +10 °C. Detta är ett centralt mått för val av sorter.',
+		'weather.sat.grapes': 'Vindruvor',
+		'weather.sat.grapes.desc': 'Vindruvor är en värmekrävande gröda. Sortens mognadsperiod avgör det SAT-värde som krävs:',
+		'weather.sat.grapes.veryearly': 'Mycket tidiga: under 2500 °C',
+		'weather.sat.grapes.early': 'Tidiga: 2500–2600 °C',
+		'weather.sat.grapes.earlymid': 'Tidigt medelsena: 2600–2700 °C',
+		'weather.sat.grapes.mid': 'Medelsena: 2700–2800 °C',
+		'weather.sat.apples': 'Äpplen',
+		'weather.sat.apples.desc': 'Äppelträd är härdigare och kräver mindre värme. Sommarsorter klarar sig med lägre SAT-värden, sena sorter kräver 2500–2600 °C.',
+		'weather.sat.source': 'Data: Meteorologiska institutet, öppen data.',
 
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
@@ -204,7 +226,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Weather
 		'weather.title': 'Weather in Mustio',
-		'weather.subtitle': 'Weather observations from FMI station Karjaa Kuusisto.',
+		'weather.subtitle': 'Weather observations from FMI station Lohja.',
 		'weather.date': 'Date',
 		'weather.tmin': 'Min °C',
 		'weather.tmax': 'Max °C',
@@ -216,8 +238,19 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.title': 'Sum of Active Temperatures (SAT)',
 		'weather.sat.year': 'Year',
 		'weather.sat.sum': 'SAT (>10 °C)',
+		'weather.sat.lastfrost': 'Last spring frost',
+		'weather.sat.firstfrost': 'First autumn frost',
 		'weather.sat.ongoing': '(ongoing)',
-		'weather.sat.method': 'SAT is calculated by summing daily mean temperatures ((min + max) / 2) for days when the mean exceeds +10 °C. This is the key heat metric for grape variety selection in viticulture. Data: Finnish Meteorological Institute, open data.',
+		'weather.sat.desc': 'SAT is the total heat accumulated during the growing season: the sum of daily mean temperatures ((min + max) / 2) for days when the mean exceeds +10 °C. This is a key metric for variety selection.',
+		'weather.sat.grapes': 'Grapes',
+		'weather.sat.grapes.desc': 'Grapes are a heat-demanding crop. The ripening period of a variety determines the required SAT:',
+		'weather.sat.grapes.veryearly': 'Very early: below 2500 °C',
+		'weather.sat.grapes.early': 'Early: 2500–2600 °C',
+		'weather.sat.grapes.earlymid': 'Early-mid: 2600–2700 °C',
+		'weather.sat.grapes.mid': 'Mid-season: 2700–2800 °C',
+		'weather.sat.apples': 'Apples',
+		'weather.sat.apples.desc': 'Apple trees are hardier and require less heat. Summer varieties manage with lower SAT values, while late varieties need 2500–2600 °C.',
+		'weather.sat.source': 'Data: Finnish Meteorological Institute, open data.',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',

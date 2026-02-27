@@ -66,13 +66,28 @@ const lang = 'fi';
 									<tr>
 										<th>{t(lang, 'weather.sat.year')}</th>
 										<th>{t(lang, 'weather.sat.sum')}</th>
+										<th>{t(lang, 'weather.sat.lastfrost')}</th>
+										<th>{t(lang, 'weather.sat.firstfrost')}</th>
 									</tr>
 								</thead>
 								<tbody id="sat-tbody"></tbody>
 							</table>
 						</div>
 					</div>
-					<p class="source">{t(lang, 'weather.sat.method')}</p>
+					<div class="sat-info">
+						<p>{t(lang, 'weather.sat.desc')}</p>
+						<h3>{t(lang, 'weather.sat.grapes')}</h3>
+						<p>{t(lang, 'weather.sat.grapes.desc')}</p>
+						<ul>
+							<li>{t(lang, 'weather.sat.grapes.veryearly')}</li>
+							<li>{t(lang, 'weather.sat.grapes.early')}</li>
+							<li>{t(lang, 'weather.sat.grapes.earlymid')}</li>
+							<li>{t(lang, 'weather.sat.grapes.mid')}</li>
+						</ul>
+						<h3>{t(lang, 'weather.sat.apples')}</h3>
+						<p>{t(lang, 'weather.sat.apples.desc')}</p>
+					</div>
+					<p class="source">{t(lang, 'weather.sat.source')}</p>
 				</div>
 			</div>
 		</main>
@@ -115,7 +130,7 @@ const lang = 'fi';
 						version: '2.0.0',
 						request: 'getFeature',
 						storedquery_id: 'fmi::observations::weather::daily::simple',
-						place: 'mustio',
+						place: 'lohja',
 						starttime: `${startStr}T00:00:00Z`,
 						endtime: `${endStr}T00:00:00Z`,
 						parameters: 'tmin,tmax,snow',
@@ -349,7 +364,7 @@ const lang = 'fi';
 							version: '2.0.0',
 							request: 'getFeature',
 							storedquery_id: 'fmi::observations::weather::daily::simple',
-							place: 'mustio',
+							place: 'lohja',
 							starttime: `${startStr}T00:00:00Z`,
 							endtime: `${endStr}T00:00:00Z`,
 							parameters: 'tmin,tmax',
@@ -360,18 +375,30 @@ const lang = 'fi';
 						const data = parseWeatherXml(xml);
 
 						let sat = 0;
+						let lastSpringFrost = '';
+						let firstAutumnFrost = '';
 						for (const day of data) {
 							if (day.tmin !== null && day.tmax !== null) {
 								const avg = (day.tmin + day.tmax) / 2;
 								if (avg > 10) sat += avg;
 							}
+							if (day.tmin !== null && day.tmin < 0) {
+								const month = parseInt(day.date.split('-')[1]);
+								if (month <= 6) {
+									lastSpringFrost = day.date;
+								} else if (month >= 8 && !firstAutumnFrost) {
+									firstAutumnFrost = day.date;
+								}
+							}
 						}
-						return { year, sat, ongoing: year === thisYear };
+						return { year, sat, lastSpringFrost, firstAutumnFrost, ongoing: year === thisYear };
 					}));
 
 					satTbody.innerHTML = results.reverse().map(r => `<tr>
 						<td>${r.year}</td>
 						<td>${Math.round(r.sat)}${r.ongoing ? ' <span class="ongoing">' + ongoingText + '</span>' : ''}</td>
+						<td>${r.lastSpringFrost ? new Date(r.lastSpringFrost).toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'numeric', year: 'numeric' }) : '—'}</td>
+						<td>${r.firstAutumnFrost ? new Date(r.firstAutumnFrost).toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'numeric', year: 'numeric' }) : '—'}</td>
 					</tr>`).join('');
 
 					satLoading.hidden = true;
@@ -498,6 +525,22 @@ const lang = 'fi';
 	}
 	.sat-section [hidden] {
 		display: none;
+	}
+	.sat-info {
+		margin-top: 2em;
+		font-size: 0.95em;
+		line-height: 1.7;
+	}
+	.sat-info h3 {
+		margin-top: 1.2em;
+		margin-bottom: 0.3em;
+	}
+	.sat-info ul {
+		margin: 0.5em 0;
+		padding-left: 1.5em;
+	}
+	.sat-info li {
+		margin-bottom: 0.2em;
 	}
 	.ongoing {
 		font-size: 0.85em;
