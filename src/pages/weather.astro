@@ -320,7 +320,7 @@ const lang = 'fi';
 			const currentYear = now.getFullYear();
 			const currentMonth = now.getMonth() + 1;
 
-			for (let y = currentYear; y >= 2020; y--) {
+			for (let y = currentYear; y >= 2010; y--) {
 				const opt = document.createElement('option');
 				opt.value = String(y);
 				opt.textContent = String(y);
@@ -358,7 +358,7 @@ const lang = 'fi';
 					const today = new Date();
 					const thisYear = today.getFullYear();
 					const years = [];
-					for (let y = 2020; y <= thisYear; y++) years.push(y);
+					for (let y = 2010; y <= thisYear; y++) years.push(y);
 
 					const results = await Promise.all(years.map(async (year) => {
 						const startStr = `${year}-01-01`;
