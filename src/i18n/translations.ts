@@ -94,6 +94,21 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.apples.desc': 'Omenapuut ovat kestävämpiä ja vaativat vähemmän lämpöä. Kesälajikkeet pärjäävät matalammilla SAT-arvoilla, myöhäiset lajikkeet vaativat 2500–2600 °C.',
 		'weather.sat.source': 'Tiedot: Ilmatieteen laitos, avoin data.',
 
+		// SAT Map
+		'nav.satmap': 'SAT-kartta',
+		'satmap.title': 'SAT-kartta Suomesta',
+		'satmap.subtitle': 'Aktiivisten lämpötilojen summa (SAT) interpoloituna noin 200 FMI-sääasemalta.',
+		'satmap.year': 'Vuosi',
+		'satmap.year.hint': 'Valitse vuosi nähdäksesi SAT-arvot kartalla.',
+		'satmap.loading': 'Ladataan',
+		'satmap.loading.month': 'Ladataan kuukautta',
+		'satmap.of': '/',
+		'satmap.station': 'Asema',
+		'satmap.nodata': 'Tietoja ei ole saatavilla.',
+		'satmap.legend.low': 'Matala',
+		'satmap.legend.high': 'Korkea',
+		'satmap.source': 'Lähde: Ilmatieteen laitos, avoin data. Interpolointi IDW-menetelmällä.',
+
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
 	},
@@ -182,6 +197,21 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.apples.desc': 'Äppelträd är härdigare och kräver mindre värme. Sommarsorter klarar sig med lägre SAT-värden, sena sorter kräver 2500–2600 °C.',
 		'weather.sat.source': 'Data: Meteorologiska institutet, öppen data.',
 
+		// SAT Map
+		'nav.satmap': 'SAT-karta',
+		'satmap.title': 'SAT-karta över Finland',
+		'satmap.subtitle': 'Summa av aktiva temperaturer (SAT) interpolerad från ca 200 FMI-väderstationer.',
+		'satmap.year': 'År',
+		'satmap.year.hint': 'Välj ett år för att se SAT-värden på kartan.',
+		'satmap.loading': 'Laddar',
+		'satmap.loading.month': 'Laddar månad',
+		'satmap.of': '/',
+		'satmap.station': 'Station',
+		'satmap.nodata': 'Data är inte tillgänglig.',
+		'satmap.legend.low': 'Låg',
+		'satmap.legend.high': 'Hög',
+		'satmap.source': 'Källa: Meteorologiska institutet, öppen data. Interpolering med IDW-metoden.',
+
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
 	},
@@ -269,6 +299,21 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'weather.sat.apples': 'Apples',
 		'weather.sat.apples.desc': 'Apple trees are hardier and require less heat. Summer varieties manage with lower SAT values, while late varieties need 2500–2600 °C.',
 		'weather.sat.source': 'Data: Finnish Meteorological Institute, open data.',
+
+		// SAT Map
+		'nav.satmap': 'SAT Map',
+		'satmap.title': 'SAT Map of Finland',
+		'satmap.subtitle': 'Sum of Active Temperatures (SAT) interpolated from ~200 FMI weather stations.',
+		'satmap.year': 'Year',
+		'satmap.year.hint': 'Select a year to see SAT values on the map.',
+		'satmap.loading': 'Loading',
+		'satmap.loading.month': 'Loading month',
+		'satmap.of': '/',
+		'satmap.station': 'Station',
+		'satmap.nodata': 'Data is not available.',
+		'satmap.legend.low': 'Low',
+		'satmap.legend.high': 'High',
+		'satmap.source': 'Source: Finnish Meteorological Institute, open data. Interpolation using IDW method.',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',

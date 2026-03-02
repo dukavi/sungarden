@@ -24,6 +24,7 @@ const { lang = 'fi' } = Astro.props;
 				<a href={getLocalePath(lang, '/about')}>{t(lang, 'nav.about')}</a>
 				<a href={getLocalePath(lang, '/blog')}>{t(lang, 'nav.blog')}</a>
 				<a href={getLocalePath(lang, '/weather')}>{t(lang, 'nav.weather')}</a>
+				<a href={getLocalePath(lang, '/sat-map')}>{t(lang, 'nav.satmap')}</a>
 			</div>
 			<LanguageSwitcher currentLang={lang} />
 		</nav>
