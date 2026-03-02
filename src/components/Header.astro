@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import type { Lang } from '../i18n/translations';
 import { t, getLocalePath } from '../i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import logoImg from '../images/box_logo_transparent_bg.png';
 
 interface Props {
 	lang?: Lang;
@@ -13,6 +15,7 @@ const { lang = 'fi' } = Astro.props;
 <header>
 	<div class="header-inner">
 		<a href={getLocalePath(lang, '/')} class="logo">
+			<Image src={logoImg} alt="Aurinkotarha Mustio" width={40} height={40} class="logo-img" />
 			{t(lang, 'site.title')}
 		</a>
 		<nav>
@@ -65,6 +68,14 @@ const { lang = 'fi' } = Astro.props;
 		font-size: 1.3em;
 		font-weight: 500;
 		letter-spacing: 0.02em;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+	}
+	.logo-img {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
 	}
 	.logo:hover {
 		color: var(--text);

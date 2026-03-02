@@ -59,6 +59,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.title': 'Omenatarhamme',
 		'about.orchard.text': 'Käytämme moderneja intensiiviviljelymenetelmiä: kääpiöperusrunkoja, tiheää istutusta jopa 50 cm välein, tippukastelua, fertigaatiota sekä kevät- ja kesäleikkausta. Jokainen puu muotoillaan kapeaksi 2D-latvukseksi, enintään 40 cm leveäksi, jotta auringonvalo tavoittaa jokaisen hedelmän — näin omenamme saavuttavat täyden makunsa ja syvimmän värinsä. Tämä lähestymistapa vähentää luonnostaan myös kasvinsuojelun tarvetta. Omenoiden lisäksi kokeilemme päärynä-, luumu- ja kriikunalajikkeita sekä ylläpidämme viinirypäleiden koeistutuksia.',
 		'about.contact.title': 'Ota yhteyttä',
+		'contact.name': 'Nimi',
+		'contact.email': 'Sähköposti',
+		'contact.message': 'Viesti',
+		'contact.send': 'Lähetä',
+		'contact.thanks': 'Kiitos viestistäsi!',
 
 		// Weather
 		'weather.title': 'Sää Mustiossa',
@@ -142,6 +147,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.title': 'Vår äppelodling',
 		'about.orchard.text': 'Vi använder moderna intensiva metoder: dvärggrundstammar, tät plantering med så lite som 50 cm mellanrum, droppbevattning, fertigering samt vår- och sommarbeskärning. Varje träd formas till en smal 2D-krona, högst 40 cm bred, så att solljuset når varje frukt — och ger våra äpplen deras fulla smak och djupaste färg. Denna metod minskar naturligt även behovet av växtskydd. Utöver äpplen experimenterar vi med päron-, plommon- och körsbärsplommonsorter samt har provplanteringar av vindruvor.',
 		'about.contact.title': 'Kontakta oss',
+		'contact.name': 'Namn',
+		'contact.email': 'E-post',
+		'contact.message': 'Meddelande',
+		'contact.send': 'Skicka',
+		'contact.thanks': 'Tack för ditt meddelande!',
 
 		// Weather
 		'weather.title': 'Väder i Svartå',
@@ -225,6 +235,11 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'about.orchard.title': 'Our orchard',
 		'about.orchard.text': 'We use modern intensive methods: dwarf rootstocks, high-density planting as close as 50 cm apart, drip irrigation, fertigation, and careful spring and summer pruning. Each tree is trained into a narrow 2D canopy, no wider than 40 cm, so that sunlight reaches every fruit — giving our apples their fullest flavour and deepest colour. This approach also naturally reduces the need for crop protection. Beyond apples, we experiment with pear, plum and cherry plum varieties, and maintain trial plantings of grape.',
 		'about.contact.title': 'Contact us',
+		'contact.name': 'Name',
+		'contact.email': 'Email',
+		'contact.message': 'Message',
+		'contact.send': 'Send',
+		'contact.thanks': 'Thank you for your message!',
 
 		// Weather
 		'weather.title': 'Weather in Mustio',

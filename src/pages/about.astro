@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import { t } from '../i18n/utils';
 import aboutImage from '../images/20241006_134642.jpg';
 import orchardImage from '../images/20250907_153530.jpg';
+import farmLogo from '../images/farm_logo_white_bg.jpg';
 
 const lang = 'fi';
 ---
@@ -20,6 +21,7 @@ const lang = 'fi';
 		<main>
 			<div class="container">
 				<div class="page-header">
+					<Image src={farmLogo} alt="Aurinkotarha Mustio" width={280} height={280} class="about-logo" />
 					<h1>{t(lang, 'about.title')}</h1>
 					<p class="intro">{t(lang, 'about.intro')}</p>
 				</div>
@@ -49,11 +51,47 @@ const lang = 'fi';
 
 				<div class="content-section">
 					<h2>{t(lang, 'about.contact.title')}</h2>
-					<p>info@aurinkotarha.fi</p>
+					<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
+						<input type="hidden" name="form-name" value="contact" />
+						<p hidden><label>Don't fill this out: <input name="bot-field" /></label></p>
+						<div class="form-field">
+							<label for="name">{t(lang, 'contact.name')}</label>
+							<input type="text" id="name" name="name" required />
+						</div>
+						<div class="form-field">
+							<label for="email">{t(lang, 'contact.email')}</label>
+							<input type="email" id="email" name="email" required />
+						</div>
+						<div class="form-field">
+							<label for="message">{t(lang, 'contact.message')}</label>
+							<textarea id="message" name="message" rows="5" required></textarea>
+						</div>
+						<button type="submit">{t(lang, 'contact.send')}</button>
+					</form>
+					<p class="form-success" hidden>{t(lang, 'contact.thanks')}</p>
 				</div>
 			</div>
 		</main>
 		<Footer lang={lang} />
+		<script>
+			const form = document.querySelector('.contact-form') as HTMLFormElement;
+			const success = document.querySelector('.form-success') as HTMLElement;
+			form?.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const data = new FormData(form);
+				try {
+					await fetch('/', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						body: new URLSearchParams(data as any).toString(),
+					});
+					form.hidden = true;
+					success.hidden = false;
+				} catch {
+					form.submit();
+				}
+			});
+		</script>
 	</body>
 </html>
 
@@ -64,6 +102,13 @@ const lang = 'fi';
 	.page-header {
 		text-align: center;
 		margin-bottom: 3em;
+	}
+	.about-logo {
+		width: 180px;
+		height: auto;
+		margin: 0 auto 1.5em;
+		display: block;
+		border-radius: 8px;
 	}
 	.page-header h1 {
 		margin-bottom: 0.4em;
@@ -108,6 +153,51 @@ const lang = 'fi';
 	.address {
 		font-weight: 500;
 		color: var(--accent);
+	}
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		max-width: 480px;
+	}
+	.form-field {
+		margin-bottom: 1.2em;
+	}
+	.form-field label {
+		display: block;
+		margin-bottom: 0.3em;
+		font-weight: 500;
+	}
+	.form-field input,
+	.form-field textarea {
+		width: 100%;
+		padding: 0.6em 0.8em;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		font-family: inherit;
+		font-size: 1em;
+		background: var(--card-bg);
+		color: var(--text);
+	}
+	.form-field textarea {
+		resize: vertical;
+	}
+	.contact-form button[type="submit"] {
+		align-self: flex-start;
+		padding: 0.6em 2em;
+		background: var(--green);
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		font-size: 1em;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+	.contact-form button[type="submit"]:hover {
+		opacity: 0.85;
+	}
+	.form-success {
+		color: var(--green);
+		font-weight: 500;
 	}
 	@media (max-width: 720px) {
 		main {
