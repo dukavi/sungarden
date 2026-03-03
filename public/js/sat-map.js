@@ -304,6 +304,16 @@
 		maxZoom: 10,
 	}).addTo(map);
 
+	// Aurinkotarha marker
+	var farmIcon = L.divIcon({
+		className: 'farm-marker',
+		html: '<span>Aurinkotarha</span>',
+		iconSize: [80, 14],
+		iconAnchor: [0, 7],
+	});
+	L.marker([60.08, 23.67], { icon: farmIcon }).addTo(map)
+		.bindPopup('<strong>Aurinkotarha Mustio</strong>');
+
 	var heatLayer = null;
 	var majorGroup = L.layerGroup().addTo(map);
 	var minorGroup = L.layerGroup();

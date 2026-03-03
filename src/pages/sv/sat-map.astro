@@ -12,6 +12,7 @@ const lang = 'sv';
 	<head>
 		<BaseHead title={`${t(lang, 'satmap.title')} — ${t(lang, 'site.title')}`} description={t(lang, 'satmap.subtitle')} lang={lang} />
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+		<style is:inline>.leaflet-attribution-flag { display: none !important; }</style>
 		<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 	</head>
 	<body>
@@ -184,6 +185,17 @@ const lang = 'sv';
 		margin: 0 auto;
 		font-size: 0.85em;
 		color: var(--text-muted);
+	}
+	:global(.farm-marker) {
+		background: none !important;
+		border: none !important;
+	}
+	:global(.farm-marker span) {
+		font-size: 9px;
+		font-weight: 700;
+		color: var(--brown, #5a4a3a);
+		text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+		white-space: nowrap;
 	}
 	:global(.sat-label) {
 		background: none !important;

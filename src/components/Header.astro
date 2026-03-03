@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import type { Lang } from '../i18n/translations';
 import { t, getLocalePath } from '../i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
-import logoImg from '../images/box_logo_transparent_bg.png';
+import logoImg from '../images/logo.svg';
 
 interface Props {
 	lang?: Lang;
@@ -15,7 +15,7 @@ const { lang = 'fi' } = Astro.props;
 <header>
 	<div class="header-inner">
 		<a href={getLocalePath(lang, '/')} class="logo">
-			<Image src={logoImg} alt="Aurinkotarha Mustio" width={40} height={40} class="logo-img" />
+			<img src={logoImg.src} alt="Aurinkotarha Mustio" width="56" height="56" class="logo-img" />
 			{t(lang, 'site.title')}
 		</a>
 		<nav>
@@ -74,9 +74,8 @@ const { lang = 'fi' } = Astro.props;
 		gap: 0.5em;
 	}
 	.logo-img {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
+		width: 56px;
+		height: 56px;
 	}
 	.logo:hover {
 		color: var(--text);

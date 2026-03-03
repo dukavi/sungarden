@@ -6,7 +6,7 @@ import Footer from '../../components/Footer.astro';
 import { t } from '../../i18n/utils';
 import aboutImage from '../../images/20241006_134642.jpg';
 import orchardImage from '../../images/20250907_153530.jpg';
-import farmLogo from '../../images/farm_logo_white_bg.jpg';
+import farmLogo from '../../images/logo_color.svg';
 
 const lang = 'en';
 ---
@@ -21,7 +21,7 @@ const lang = 'en';
 		<main>
 			<div class="container">
 				<div class="page-header">
-					<Image src={farmLogo} alt="Aurinkotarha Mustio" width={280} height={280} class="about-logo" />
+					<img src={farmLogo.src} alt="Aurinkotarha Mustio" width="280" height="280" class="about-logo" />
 					<h1>{t(lang, 'about.title')}</h1>
 					<p class="intro">{t(lang, 'about.intro')}</p>
 				</div>
