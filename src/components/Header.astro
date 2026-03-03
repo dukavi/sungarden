@@ -4,6 +4,7 @@ import type { Lang } from '../i18n/translations';
 import { t, getLocalePath } from '../i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import logoImg from '../images/logo_main.svg';
+import { features } from '../config';
 
 interface Props {
 	lang?: Lang;
@@ -22,6 +23,7 @@ const { lang = 'fi' } = Astro.props;
 			<div class="nav-links">
 				<a href={getLocalePath(lang, '/')}>{t(lang, 'nav.home')}</a>
 				<a href={getLocalePath(lang, '/about')}>{t(lang, 'nav.about')}</a>
+				{features.varieties && <a href={getLocalePath(lang, '/varieties')}>{t(lang, 'nav.varieties')}</a>}
 				<a href={getLocalePath(lang, '/blog')}>{t(lang, 'nav.blog')}</a>
 				<a href={getLocalePath(lang, '/weather')}>{t(lang, 'nav.weather')}</a>
 				<a href={getLocalePath(lang, '/sat-map')}>{t(lang, 'nav.satmap')}</a>

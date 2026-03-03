@@ -1,0 +1,79 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { t, getLocalePath } from '../../../i18n/utils';
+
+const lang = 'sv';
+const type = 'plums';
+const varieties = ['victoria'];
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t(lang, `varieties.${type}.title`)} — ${t(lang, 'site.title')}`} description={t(lang, `varieties.${type}.intro`)} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<div class="container">
+				<a href={getLocalePath(lang, '/varieties')} class="back-link">&larr; {t(lang, 'varieties.back')}</a>
+				<div class="page-header">
+					<h1>{t(lang, `varieties.${type}.title`)}</h1>
+					<p class="intro">{t(lang, `varieties.${type}.intro`)}</p>
+				</div>
+				<div class="varieties-list">
+					{varieties.map((v) => (
+						<div class="variety-card">
+							<h2>{t(lang, `varieties.${type}.${v}.name`)}</h2>
+							<p>{t(lang, `varieties.${type}.${v}.desc`)}</p>
+						</div>
+					))}
+				</div>
+			</div>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	main { padding: 6em 0; }
+	.back-link {
+		display: inline-block;
+		margin-bottom: 2em;
+		color: var(--accent);
+		text-decoration: none;
+		font-size: 0.9em;
+	}
+	.back-link:hover { text-decoration: underline; }
+	.page-header { text-align: center; margin-bottom: 3em; }
+	.page-header h1 { margin-bottom: 0.4em; }
+	.intro { font-size: 1.1em; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+	.varieties-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 2em;
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.variety-card {
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		padding: 1.5em 2em;
+	}
+	.variety-card h2 {
+		font-size: 1.15em;
+		margin-bottom: 0.4em;
+	}
+	.variety-card p {
+		color: var(--text-muted);
+		font-size: 0.95em;
+		line-height: 1.6;
+	}
+	@media (max-width: 720px) {
+		main { padding: 3em 0; }
+		.varieties-list { grid-template-columns: 1fr; }
+	}
+</style>

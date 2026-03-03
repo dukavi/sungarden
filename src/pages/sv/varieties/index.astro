@@ -1,0 +1,91 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { t, getLocalePath } from '../../../i18n/utils';
+
+const lang = 'sv';
+
+const categories = [
+	{ slug: 'grapes', count: 13 },
+	{ slug: 'apples', count: 4 },
+	{ slug: 'pears', count: 3 },
+	{ slug: 'plums', count: 1 },
+	{ slug: 'japanese-plums', count: 2 },
+];
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t(lang, 'varieties.title')} — ${t(lang, 'site.title')}`} description={t(lang, 'varieties.subtitle')} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<div class="container">
+				<div class="page-header">
+					<h1>{t(lang, 'varieties.title')}</h1>
+					<p class="intro">{t(lang, 'varieties.subtitle')}</p>
+				</div>
+				<div class="categories-grid">
+					{categories.map(({ slug, count }) => (
+						<a href={getLocalePath(lang, `/varieties/${slug}`)} class="category-card">
+							<h2>{t(lang, `varieties.${slug}.title`)}</h2>
+							<p>{t(lang, `varieties.${slug}.card`)}</p>
+							<span class="count">{count} {t(lang, 'varieties.count')}</span>
+						</a>
+					))}
+				</div>
+			</div>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	main { padding: 6em 0; }
+	.page-header { text-align: center; margin-bottom: 3em; }
+	.page-header h1 { margin-bottom: 0.4em; }
+	.intro { font-size: 1.1em; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+	.categories-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 2em;
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.category-card {
+		display: block;
+		text-decoration: none;
+		color: var(--text);
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		padding: 2em;
+		transition: border-color 0.3s ease, transform 0.2s ease;
+	}
+	.category-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+	.category-card h2 {
+		font-size: 1.3em;
+		margin-bottom: 0.5em;
+	}
+	.category-card p {
+		color: var(--text-muted);
+		font-size: 0.95em;
+		line-height: 1.6;
+		margin-bottom: 1em;
+	}
+	.count {
+		font-size: 0.85em;
+		color: var(--accent);
+		font-weight: 500;
+	}
+	@media (max-width: 720px) {
+		main { padding: 3em 0; }
+		.categories-grid { grid-template-columns: 1fr; }
+	}
+</style>
