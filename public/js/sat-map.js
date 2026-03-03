@@ -311,7 +311,7 @@
 		iconSize: [80, 14],
 		iconAnchor: [0, 7],
 	});
-	L.marker([60.08, 23.67], { icon: farmIcon }).addTo(map)
+	L.marker([60.155, 23.84], { icon: farmIcon }).addTo(map)
 		.bindPopup('<strong>Aurinkotarha Mustio</strong>');
 
 	var heatLayer = null;
