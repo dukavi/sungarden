@@ -27,6 +27,11 @@ const lang = 'en';
 				<div class="controls">
 					<label>{t(lang, 'satmap.year')}</label>
 					<select id="year-picker"></select>
+					<label>{t(lang, 'satmap.threshold')}</label>
+					<select id="threshold-picker">
+						<option value="10">SAT &gt;+10 °C</option>
+						<option value="5">SAT &gt;+5 °C</option>
+					</select>
 					<span class="year-hint">{t(lang, 'satmap.year.hint')}</span>
 				</div>
 
@@ -43,12 +48,12 @@ const lang = 'en';
 					<span class="legend-label">{t(lang, 'satmap.legend.low')}</span>
 					<div class="legend-bar"></div>
 					<span class="legend-label">{t(lang, 'satmap.legend.high')}</span>
-					<div class="legend-ticks">
-						<span>500</span>
-						<span>1000</span>
-						<span>1500</span>
-						<span>2000</span>
-						<span>2500</span>
+					<div id="legend-ticks" class="legend-ticks">
+						<span>400</span>
+						<span>900</span>
+						<span>1400</span>
+						<span>1900</span>
+						<span>2800</span>
 					</div>
 				</div>
 

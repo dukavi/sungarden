@@ -5,6 +5,9 @@
 	var loadingMonthText = scriptEl?.getAttribute('data-loading-month-text') || 'Loading month';
 	var ofText = scriptEl?.getAttribute('data-of-text') || '/';
 
+	// Current threshold: 5 or 10
+	var currentThreshold = 10;
+
 	var STATIONS_META = []; // Loaded from stations.json
 
 	// Major stations shown at all zoom levels (~35 regional)
@@ -69,14 +72,23 @@
 	// -----------------------------------------------------------------------
 	// Color scale
 	// -----------------------------------------------------------------------
+	var COLOR_STOPS_10 = [
+		{ v: 400, r: 49, g: 130, b: 189 },
+		{ v: 900, r: 49, g: 189, b: 189 },
+		{ v: 1400, r: 49, g: 189, b: 80 },
+		{ v: 1900, r: 230, g: 160, b: 40 },
+		{ v: 2800, r: 210, g: 40, b: 40 },
+	];
+	var COLOR_STOPS_5 = [
+		{ v: 600, r: 49, g: 130, b: 189 },
+		{ v: 1200, r: 49, g: 189, b: 189 },
+		{ v: 1800, r: 49, g: 189, b: 80 },
+		{ v: 2400, r: 230, g: 160, b: 40 },
+		{ v: 3600, r: 210, g: 40, b: 40 },
+	];
+
 	function satColor(val) {
-		var stops = [
-			{ v: 400, r: 49, g: 130, b: 189 },
-			{ v: 900, r: 49, g: 189, b: 189 },
-			{ v: 1400, r: 49, g: 189, b: 80 },
-			{ v: 1900, r: 230, g: 160, b: 40 },
-			{ v: 2800, r: 210, g: 40, b: 40 },
-		];
+		var stops = currentThreshold === 5 ? COLOR_STOPS_5 : COLOR_STOPS_10;
 		if (val <= stops[0].v) return stops[0];
 		if (val >= stops[stops.length - 1].v) return stops[stops.length - 1];
 		for (var i = 0; i < stops.length - 1; i++) {
@@ -144,12 +156,12 @@
 		return stationMap;
 	}
 
-	function computeSATFromDays(days) {
+	function computeSATFromDays(days, threshold) {
 		var sat = 0;
 		days.forEach(function (day) {
 			if (day.tmin !== null && day.tmax !== null) {
 				var avg = (day.tmin + day.tmax) / 2;
-				if (avg > 10) sat += avg;
+				if (avg > threshold) sat += avg;
 			}
 		});
 		return Math.round(sat);
@@ -188,7 +200,8 @@
 				name: meta ? meta.name : 'Station ' + s.id,
 				lat: s.lat,
 				lon: s.lon,
-				sat: s.sat,
+				sat5: s.sat5 !== undefined ? s.sat5 : null,
+				sat10: s.sat10 !== undefined ? s.sat10 : (s.sat !== undefined ? s.sat : null),
 				ok: true,
 			};
 		});
@@ -250,14 +263,16 @@
 		// Compute SAT and match to station metadata
 		var results = [];
 		allStationData.forEach(function (station) {
-			var sat = computeSATFromDays(station.days);
+			var sat5 = computeSATFromDays(station.days, 5);
+			var sat10 = computeSATFromDays(station.days, 10);
 			var meta = findStationMeta(station.lat, station.lon);
 			results.push({
 				id: meta ? meta.id : station.lat.toFixed(4) + '_' + station.lon.toFixed(4),
 				name: meta ? meta.name : station.lat.toFixed(2) + ', ' + station.lon.toFixed(2),
 				lat: station.lat,
 				lon: station.lon,
-				sat: sat,
+				sat5: sat5,
+				sat10: sat10,
 				ok: true,
 			});
 		});
@@ -330,8 +345,12 @@
 	// -----------------------------------------------------------------------
 	// IDW heatmap overlay
 	// -----------------------------------------------------------------------
+	function getSat(s) {
+		return currentThreshold === 5 ? s.sat5 : s.sat10;
+	}
+
 	function createHeatOverlay(stationData) {
-		var validStations = stationData.filter(function (s) { return s.ok && s.sat > 0; });
+		var validStations = stationData.filter(function (s) { return s.ok && getSat(s) > 0; });
 		if (validStations.length === 0) return null;
 
 		var IDWLayer = L.GridLayer.extend({
@@ -356,16 +375,17 @@
 						var weightSum = 0;
 						for (var i = 0; i < validStations.length; i++) {
 							var s = validStations[i];
+							var satVal = getSat(s);
 							var dLat = lat - s.lat;
 							var dLon = (lon - s.lon) * Math.cos(lat * Math.PI / 180);
 							var dist = Math.sqrt(dLat * dLat + dLon * dLon);
 							if (dist < 0.01) {
-								weightedSum = s.sat;
+								weightedSum = satVal;
 								weightSum = 1;
 								break;
 							}
 							var w = 1 / (dist * dist);
-							weightedSum += w * s.sat;
+							weightedSum += w * satVal;
 							weightSum += w;
 						}
 
@@ -387,16 +407,68 @@
 	// Render
 	// -----------------------------------------------------------------------
 	function createLabel(station) {
-		var c = satColor(station.sat);
+		var satVal = getSat(station);
+		var c = satColor(satVal);
 		var icon = L.divIcon({
 			className: 'sat-label',
-			html: '<span style="color:rgb(' + c.r + ',' + c.g + ',' + c.b + ')">' + station.sat + '</span>',
+			html: '<span style="color:rgb(' + c.r + ',' + c.g + ',' + c.b + ')">' + satVal + '</span>',
 			iconSize: [40, 16],
 			iconAnchor: [20, 8],
 		});
 		var marker = L.marker([station.lat, station.lon], { icon: icon });
-		marker.bindPopup('<strong>' + station.name + '</strong><br>SAT: ' + station.sat + ' °C');
+		marker.bindPopup('<strong>' + station.name + '</strong><br>SAT>+' + currentThreshold + ': ' + satVal + ' °C');
 		return marker;
+	}
+
+	var cachedData = null;
+
+	function renderData(data) {
+		if (heatLayer) {
+			map.removeLayer(heatLayer);
+			heatLayer = null;
+		}
+		majorGroup.clearLayers();
+		minorGroup.clearLayers();
+
+		var validData = data.filter(function (s) { return s.ok && getSat(s) > 0; });
+		if (validData.length === 0) {
+			document.getElementById('error-msg').hidden = false;
+			return;
+		}
+		document.getElementById('error-msg').hidden = true;
+
+		for (var i = 0; i < data.length; i++) {
+			var s = data[i];
+			if (!s.ok || getSat(s) <= 0) continue;
+			var marker = createLabel(s);
+			if (MAJOR_IDS.has(s.id)) {
+				majorGroup.addLayer(marker);
+			} else {
+				minorGroup.addLayer(marker);
+			}
+		}
+
+		if (map.getZoom() >= 7 && !map.hasLayer(minorGroup)) {
+			map.addLayer(minorGroup);
+		}
+
+		heatLayer = createHeatOverlay(data);
+		if (heatLayer) {
+			heatLayer.addTo(map);
+		}
+
+		document.getElementById('legend').hidden = false;
+
+		// Update legend ticks for current threshold
+		var ticksEl = document.getElementById('legend-ticks');
+		if (ticksEl) {
+			var stops = currentThreshold === 5 ? COLOR_STOPS_5 : COLOR_STOPS_10;
+			var html = '';
+			for (var j = 0; j < stops.length; j++) {
+				html += '<span>' + stops[j].v + '</span>';
+			}
+			ticksEl.innerHTML = html;
+		}
 	}
 
 	async function loadYear(year) {
@@ -429,35 +501,8 @@
 
 		loading.hidden = true;
 
-		var validData = data.filter(function (s) { return s.ok && s.sat > 0; });
-		if (validData.length === 0) {
-			errorMsg.hidden = false;
-			return;
-		}
-
-		// Add station labels (split into major/minor)
-		for (var i = 0; i < data.length; i++) {
-			var s = data[i];
-			if (!s.ok || s.sat <= 0) continue;
-			var marker = createLabel(s);
-			if (MAJOR_IDS.has(s.id)) {
-				majorGroup.addLayer(marker);
-			} else {
-				minorGroup.addLayer(marker);
-			}
-		}
-
-		// Show minor if zoomed in
-		if (map.getZoom() >= 7 && !map.hasLayer(minorGroup)) {
-			map.addLayer(minorGroup);
-		}
-
-		heatLayer = createHeatOverlay(data);
-		if (heatLayer) {
-			heatLayer.addTo(map);
-		}
-
-		legend.hidden = false;
+		cachedData = data;
+		renderData(data);
 	}
 
 	// -----------------------------------------------------------------------
@@ -478,6 +523,18 @@
 	yearPicker.addEventListener('change', function () {
 		loadYear(Number(yearPicker.value));
 	});
+
+	// Threshold picker
+	var thresholdPicker = document.getElementById('threshold-picker');
+	if (thresholdPicker) {
+		thresholdPicker.value = String(currentThreshold);
+		thresholdPicker.addEventListener('change', function () {
+			currentThreshold = Number(thresholdPicker.value);
+			if (cachedData) {
+				renderData(cachedData);
+			}
+		});
+	}
 
 	// Load stations metadata, then load default year
 	loadStationsMeta().then(function () {

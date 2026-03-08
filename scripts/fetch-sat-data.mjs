@@ -178,17 +178,20 @@ async function fetchYearData(year, stations) {
 		await sleep(1000);
 	}
 
-	// Compute SAT per station
+	// Compute SAT per station (both >5 and >10 thresholds)
 	const results = [];
 	for (const [key, days] of stationData) {
-		let sat = 0;
+		let sat5 = 0;
+		let sat10 = 0;
 		for (const [, day] of days) {
 			if (day.tmin !== null && day.tmax !== null) {
 				const avg = (day.tmin + day.tmax) / 2;
-				if (avg > 10) sat += avg;
+				if (avg > 5) sat5 += avg;
+				if (avg > 10) sat10 += avg;
 			}
 		}
-		sat = Math.round(sat);
+		sat5 = Math.round(sat5);
+		sat10 = Math.round(sat10);
 
 		// Match to known station
 		let station = stationLookup.get(key);
@@ -212,18 +215,19 @@ async function fetchYearData(year, stations) {
 			}
 		}
 
-		if (sat > 0) {
+		if (sat5 > 0 || sat10 > 0) {
 			results.push({
 				id: station.id,
 				lat: station.lat,
 				lon: station.lon,
-				sat,
+				sat5,
+				sat10,
 			});
 		}
 	}
 
-	results.sort((a, b) => b.sat - a.sat);
-	console.log(`  ${results.length} stations with SAT > 0`);
+	results.sort((a, b) => b.sat10 - a.sat10);
+	console.log(`  ${results.length} stations with data`);
 	return { year, stations: results };
 }
 

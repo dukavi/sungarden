@@ -66,6 +66,7 @@ const lang = 'fi';
 								<thead>
 									<tr>
 										<th>{t(lang, 'weather.sat.year')}</th>
+										<th>{t(lang, 'weather.sat.sum5')}</th>
 										<th>{t(lang, 'weather.sat.sum')}</th>
 										<th>{t(lang, 'weather.sat.lastfrost')}</th>
 										<th>{t(lang, 'weather.sat.firstfrost')}</th>
@@ -365,12 +366,14 @@ const lang = 'fi';
 						const xml = await res.text();
 						const data = parseWeatherXml(xml);
 
+						let sat5 = 0;
 						let sat = 0;
 						let lastSpringFrost = '';
 						let firstAutumnFrost = '';
 						for (const day of data) {
 							if (day.tmin !== null && day.tmax !== null) {
 								const avg = (day.tmin + day.tmax) / 2;
+								if (avg > 5) sat5 += avg;
 								if (avg > 10) sat += avg;
 							}
 							if (day.tmin !== null && day.tmin < 0) {
@@ -382,11 +385,12 @@ const lang = 'fi';
 								}
 							}
 						}
-						return { year, sat, lastSpringFrost, firstAutumnFrost, ongoing: year === thisYear };
+						return { year, sat5, sat, lastSpringFrost, firstAutumnFrost, ongoing: year === thisYear };
 					}));
 
 					satTbody.innerHTML = results.reverse().map(r => `<tr>
 						<td>${r.year}</td>
+						<td>${Math.round(r.sat5)}${r.ongoing ? ' <span class="ongoing">' + ongoingText + '</span>' : ''}</td>
 						<td>${Math.round(r.sat)}${r.ongoing ? ' <span class="ongoing">' + ongoingText + '</span>' : ''}</td>
 						<td>${r.lastSpringFrost ? new Date(r.lastSpringFrost).toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'numeric', year: 'numeric' }) : '—'}</td>
 						<td>${r.firstAutumnFrost ? new Date(r.firstAutumnFrost).toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'numeric', year: 'numeric' }) : '—'}</td>
