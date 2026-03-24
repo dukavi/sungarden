@@ -11,7 +11,7 @@ import aboutImage from '../../images/20240921_134845.jpg';
 import locationImage from '../../images/20240915_140751.jpg';
 
 const lang = 'sv';
-const posts = (await getBlogPostsByLang(lang)).slice(0, 3);
+const posts = (await getBlogPostsByLang('fi')).slice(0, 3);
 ---
 
 <!doctype html>
@@ -71,7 +71,7 @@ const posts = (await getBlogPostsByLang(lang)).slice(0, 3);
 					<h2 class="text-center">{t(lang, 'blog.latest')}</h2>
 					<div class="blog-grid">
 						{posts.map((post) => (
-							<a href={`/sv/blog/${getPostSlug(post)}/`} class="blog-card">
+							<a href={`/blog/${getPostSlug(post)}/`} class="blog-card">
 								{post.data.heroImage && (
 									<Image width={400} height={280} src={post.data.heroImage} alt="" class="blog-card-img" />
 								)}

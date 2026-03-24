@@ -26,6 +26,16 @@ export function getAlternateUrls(currentPath: string): { lang: Lang; href: strin
 	}
 	if (basePath === '') basePath = '/';
 
+	// Blog is Finnish-only — all languages link to the same Finnish blog path
+	const isBlog = basePath.startsWith('/blog');
+	if (isBlog) {
+		return [
+			{ lang: 'fi', href: basePath },
+			{ lang: 'sv', href: basePath },
+			{ lang: 'en', href: basePath },
+		];
+	}
+
 	return [
 		{ lang: 'fi', href: basePath },
 		{ lang: 'sv', href: `/sv${basePath === '/' ? '' : basePath}` || '/sv' },
