@@ -12,27 +12,34 @@ const giscusLang: Record<string, string> = {
 	sv: 'sv',
 	en: 'en',
 };
+const resolvedLang = giscusLang[lang] || 'en';
 ---
 
-<section class="comments">
-	<script
-		src="https://giscus.app/client.js"
-		data-repo="dukavi/sungarden"
-		data-repo-id="R_kgDORaN3Fg"
-		data-category="General"
-		data-category-id="DIC_kwDORaN3Fs4C5Lxw"
-		data-mapping="pathname"
-		data-strict="0"
-		data-reactions-enabled="1"
-		data-emit-metadata="0"
-		data-input-position="top"
-		data-theme="preferred_color_scheme"
-		data-lang={giscusLang[lang] || 'en'}
-		data-loading="lazy"
-		crossorigin="anonymous"
-		async
-	></script>
-</section>
+<section class="comments" data-lang={resolvedLang}></section>
+
+<script is:inline>
+(function() {
+	var container = document.querySelector('.comments[data-lang]');
+	if (!container) return;
+	var lang = container.getAttribute('data-lang') || 'en';
+	var script = document.createElement('script');
+	script.src = 'https://giscus.app/client.js';
+	script.setAttribute('data-repo', 'dukavi/sungarden');
+	script.setAttribute('data-repo-id', 'R_kgDORaN3Fg');
+	script.setAttribute('data-category', 'General');
+	script.setAttribute('data-category-id', 'DIC_kwDORaN3Fs4C5Lxw');
+	script.setAttribute('data-mapping', 'pathname');
+	script.setAttribute('data-strict', '0');
+	script.setAttribute('data-reactions-enabled', '1');
+	script.setAttribute('data-emit-metadata', '0');
+	script.setAttribute('data-input-position', 'top');
+	script.setAttribute('data-theme', 'preferred_color_scheme');
+	script.setAttribute('data-lang', lang);
+	script.setAttribute('crossorigin', 'anonymous');
+	script.async = true;
+	container.appendChild(script);
+})();
+</script>
 
 <style>
 	.comments {
