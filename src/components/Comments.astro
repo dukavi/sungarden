@@ -1,49 +1,38 @@
 ---
-import type { Lang } from '../i18n/translations';
-
-interface Props {
-	lang: Lang;
-}
-
-const { lang } = Astro.props;
-
-// Giscus doesn't support 'fi' locale — fall back to 'en'
-const giscusLang: Record<string, string> = {
-	fi: 'en',
-	sv: 'sv',
-	en: 'en',
-};
-const resolvedLang = giscusLang[lang] || 'en';
+const pageId = Astro.url.pathname;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const pageTitle = Astro.props.title || '';
 ---
 
-<section class="comments" data-lang={resolvedLang}></section>
-
-<script is:inline>
-(function() {
-	var container = document.querySelector('.comments[data-lang]');
-	if (!container) return;
-	var lang = container.getAttribute('data-lang') || 'en';
-	var script = document.createElement('script');
-	script.src = 'https://giscus.app/client.js';
-	script.setAttribute('data-repo', 'dukavi/sungarden');
-	script.setAttribute('data-repo-id', 'R_kgDORaN3Fg');
-	script.setAttribute('data-category', 'General');
-	script.setAttribute('data-category-id', 'DIC_kwDORaN3Fs4C5Lxw');
-	script.setAttribute('data-mapping', 'pathname');
-	script.setAttribute('data-strict', '0');
-	script.setAttribute('data-reactions-enabled', '1');
-	script.setAttribute('data-emit-metadata', '0');
-	script.setAttribute('data-input-position', 'top');
-	script.setAttribute('data-theme', 'preferred_color_scheme');
-	script.setAttribute('data-lang', lang);
-	script.setAttribute('crossorigin', 'anonymous');
-	script.async = true;
-	container.appendChild(script);
-})();
-</script>
+<section class="comments">
+	<div id="cusdis_thread"
+		data-host="https://cusdis.com"
+		data-app-id="41d865ed-fc44-45ab-8fd7-d9d41649cb49"
+		data-page-id={pageId}
+		data-page-url={pageUrl}
+		data-page-title={pageTitle}
+		data-theme="dark"
+	></div>
+	<script is:inline async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+	<script is:inline>
+		function setCusdisTheme() {
+			var theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			var el = document.getElementById('cusdis_thread');
+			if (el) {
+				el.setAttribute('data-theme', theme);
+				if (window.CUSDIS) window.CUSDIS.setTheme(theme);
+			}
+		}
+		setCusdisTheme();
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setCusdisTheme);
+	</script>
+</section>
 
 <style>
 	.comments {
 		margin-top: 2em;
+	}
+	.comments :global(iframe) {
+		min-height: 500px;
 	}
 </style>

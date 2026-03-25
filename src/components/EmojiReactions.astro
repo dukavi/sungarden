@@ -1,0 +1,119 @@
+---
+const pageId = Astro.url.pathname;
+const SUPABASE_URL = 'https://oopcaomsmuqituowxpwi.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_d9rJ8Jo5y6VaYAnGxQF8hg_Xjd8M5n-';
+---
+
+<div class="emoji-reactions" data-page-id={pageId} data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY}>
+	{['👍', '❤️', '😂', '😮', '🎉'].map(emoji => (
+		<button class="emoji-btn" data-emoji={emoji}>
+			<span class="emoji">{emoji}</span>
+			<span class="count">0</span>
+		</button>
+	))}
+</div>
+
+<script is:inline>
+(function () {
+	const container = document.querySelector('.emoji-reactions');
+	if (!container) return;
+
+	const pageId = container.dataset.pageId;
+	const url = container.dataset.supabaseUrl;
+	const key = container.dataset.supabaseKey;
+	const storageKey = 'reactions:' + pageId;
+
+	function getReacted() {
+		try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch { return []; }
+	}
+
+	function headers() {
+		return { 'apikey': key, 'Content-Type': 'application/json' };
+	}
+
+	async function loadCounts() {
+		try {
+			const res = await fetch(url + '/rest/v1/reactions?page_id=eq.' + encodeURIComponent(pageId) + '&select=emoji,count', { headers: headers() });
+			const data = await res.json();
+			const counts = {};
+			data.forEach(function (r) { counts[r.emoji] = r.count; });
+			container.querySelectorAll('.emoji-btn').forEach(function (btn) {
+				var emoji = btn.dataset.emoji;
+				btn.querySelector('.count').textContent = counts[emoji] || 0;
+			});
+		} catch (e) {
+			console.error('Failed to load reactions', e);
+		}
+	}
+
+	function markReacted() {
+		var reacted = getReacted();
+		container.querySelectorAll('.emoji-btn').forEach(function (btn) {
+			if (reacted.indexOf(btn.dataset.emoji) !== -1) {
+				btn.classList.add('reacted');
+			}
+		});
+	}
+
+	async function react(emoji) {
+		var reacted = getReacted();
+		if (reacted.indexOf(emoji) !== -1) return;
+
+		try {
+			await fetch(url + '/rest/v1/rpc/increment_reaction', {
+				method: 'POST',
+				headers: headers(),
+				body: JSON.stringify({ p_page_id: pageId, p_emoji: emoji })
+			});
+			reacted.push(emoji);
+			localStorage.setItem(storageKey, JSON.stringify(reacted));
+			loadCounts();
+			markReacted();
+		} catch (e) {
+			console.error('Failed to save reaction', e);
+		}
+	}
+
+	container.querySelectorAll('.emoji-btn').forEach(function (btn) {
+		btn.addEventListener('click', function () { react(btn.dataset.emoji); });
+	});
+
+	loadCounts();
+	markReacted();
+})();
+</script>
+
+<style>
+	.emoji-reactions {
+		display: flex;
+		gap: 0.5em;
+		margin: 2em 0 1em;
+	}
+	.emoji-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.3em;
+		padding: 0.4em 0.7em;
+		border: 1px solid var(--border);
+		border-radius: 2em;
+		background: var(--card-bg);
+		cursor: pointer;
+		transition: transform 0.15s, border-color 0.2s;
+		font-size: 1rem;
+	}
+	.emoji-btn:hover {
+		transform: scale(1.1);
+		border-color: var(--amber);
+	}
+	.emoji-btn.reacted {
+		border-color: var(--amber);
+		background: var(--amber);
+	}
+	.emoji-btn .count {
+		font-size: 0.85em;
+		color: var(--text-muted);
+	}
+	.emoji-btn.reacted .count {
+		color: var(--card-bg);
+	}
+</style>

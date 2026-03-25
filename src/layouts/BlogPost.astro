@@ -8,6 +8,7 @@ import Header from '../components/Header.astro';
 import type { Lang } from '../i18n/translations';
 import { getLangFromUrl, t, getLocalePath } from '../i18n/utils';
 import Comments from '../components/Comments.astro';
+import EmojiReactions from '../components/EmojiReactions.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -98,6 +99,7 @@ const lang = getLangFromUrl(Astro.url);
 						<hr />
 					</div>
 					<slot />
+					<EmojiReactions />
 					<Comments lang={lang} />
 					<hr />
 					<a href={getLocalePath(lang, '/blog')} class="back-link">&larr; {t(lang, 'blog.back')}</a>
