@@ -28,13 +28,14 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 	}
 
 	function headers() {
-		return { 'apikey': key, 'Content-Type': 'application/json' };
+		return { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' };
 	}
 
 	async function loadCounts() {
 		try {
 			const res = await fetch(url + '/rest/v1/reactions?page_id=eq.' + encodeURIComponent(pageId) + '&select=emoji,count', { headers: headers() });
 			const data = await res.json();
+			if (!res.ok) console.error('Load reactions error:', data);
 			const counts = {};
 			data.forEach(function (r) { counts[r.emoji] = r.count; });
 			container.querySelectorAll('.emoji-btn').forEach(function (btn) {
@@ -49,33 +50,38 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 	function markReacted() {
 		var reacted = getReacted();
 		container.querySelectorAll('.emoji-btn').forEach(function (btn) {
-			if (reacted.indexOf(btn.dataset.emoji) !== -1) {
-				btn.classList.add('reacted');
-			}
+			btn.classList.toggle('reacted', reacted.indexOf(btn.dataset.emoji) !== -1);
 		});
 	}
 
-	async function react(emoji) {
+	async function toggle(emoji) {
 		var reacted = getReacted();
-		if (reacted.indexOf(emoji) !== -1) return;
+		var isReacted = reacted.indexOf(emoji) !== -1;
+		var rpcName = isReacted ? 'decrement_reaction' : 'increment_reaction';
 
 		try {
-			await fetch(url + '/rest/v1/rpc/increment_reaction', {
+			var rpcRes = await fetch(url + '/rest/v1/rpc/' + rpcName, {
 				method: 'POST',
 				headers: headers(),
 				body: JSON.stringify({ p_page_id: pageId, p_emoji: emoji })
 			});
-			reacted.push(emoji);
+			if (!rpcRes.ok) { var err = await rpcRes.json(); console.error('RPC error:', err); return; }
+
+			if (isReacted) {
+				reacted.splice(reacted.indexOf(emoji), 1);
+			} else {
+				reacted.push(emoji);
+			}
 			localStorage.setItem(storageKey, JSON.stringify(reacted));
 			loadCounts();
 			markReacted();
 		} catch (e) {
-			console.error('Failed to save reaction', e);
+			console.error('Failed to toggle reaction', e);
 		}
 	}
 
 	container.querySelectorAll('.emoji-btn').forEach(function (btn) {
-		btn.addEventListener('click', function () { react(btn.dataset.emoji); });
+		btn.addEventListener('click', function () { toggle(btn.dataset.emoji); });
 	});
 
 	loadCounts();
@@ -103,17 +109,17 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 	}
 	.emoji-btn:hover {
 		transform: scale(1.1);
-		border-color: var(--amber);
+		border-color: var(--orange);
 	}
 	.emoji-btn.reacted {
-		border-color: var(--amber);
-		background: var(--amber);
+		border-color: #f6a411;
+		background: #f6a411;
 	}
 	.emoji-btn .count {
 		font-size: 0.85em;
 		color: var(--text-muted);
 	}
 	.emoji-btn.reacted .count {
-		color: var(--card-bg);
+		color: #fff;
 	}
 </style>
