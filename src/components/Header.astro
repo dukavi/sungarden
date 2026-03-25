@@ -51,16 +51,6 @@ const { lang = 'fi' } = Astro.props;
 		const widget = document.getElementById('temp-widget');
 		if (!widget) return;
 
-		const cacheKey = 'fmi-temp';
-		const cached = sessionStorage.getItem(cacheKey);
-		if (cached) {
-			const { temp, ts } = JSON.parse(cached);
-			if (Date.now() - ts < 10 * 60 * 1000) {
-				widget.textContent = temp;
-				return;
-			}
-		}
-
 		try {
 			const now = new Date();
 			const end = now.toISOString();
@@ -90,7 +80,6 @@ const { lang = 'fi' } = Astro.props;
 				else icon = '\uD83C\uDF19'; // moon
 				var temp = icon + ' ' + lastTemp.toFixed(1) + '\u00B0C';
 				widget.textContent = temp;
-				sessionStorage.setItem(cacheKey, JSON.stringify({ temp, ts: Date.now() }));
 			}
 		} catch (e) {
 			console.error('Failed to load temperature', e);
