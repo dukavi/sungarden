@@ -12,7 +12,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 ---
 
-<div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY}>
+<div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY} data-lang={lang}>
 	<div class="product-card">
 		<div class="product-info">
 			<h2>{t(lang, 'order.product')}</h2>
@@ -36,6 +36,12 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 	<form id="order-form">
 		<div class="form-grid">
+			<div class="form-field">
+				<label for="variety">{t(lang, 'order.form.variety')}</label>
+				<select id="variety" name="variety" required>
+					<option value="Williams Pride">Williams Pride</option>
+				</select>
+			</div>
 			<div class="form-field">
 				<label for="name">{t(lang, 'order.form.name')}</label>
 				<input type="text" id="name" name="name" required />
@@ -83,6 +89,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 	var url = wrapper.dataset.supabaseUrl;
 	var key = wrapper.dataset.supabaseKey;
+	var lang = wrapper.dataset.lang;
 	var qtyInput = document.getElementById('quantity');
 	var totalEl = wrapper.querySelector('.total-price');
 	var form = document.getElementById('order-form');
@@ -109,6 +116,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 			email: fd.get('email'),
 			address: fd.get('address'),
 			city: fd.get('city'),
+			variety: fd.get('variety'),
 			quantity: qty,
 			total_eur: qty * 50,
 			notes: fd.get('notes') || null,
@@ -133,7 +141,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 				fetch(url + '/functions/v1/notify-order', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-					body: JSON.stringify(body),
+					body: JSON.stringify(Object.assign({ lang: lang }, body)),
 				}).catch(function () {});
 				form.hidden = true;
 				productCard.hidden = true;

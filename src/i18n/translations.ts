@@ -202,6 +202,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.delivery.info': 'Ilmainen toimitus: Espoo, Helsinki, Vantaa, Kirkkonummi',
 		'order.delivery.free': 'Ilmainen toimitus',
 		'order.payment.info': 'Maksu toimituksen yhteydessä',
+		'order.form.variety': 'Lajike',
+
 		'order.form.name': 'Nimi',
 		'order.form.phone': 'Puhelinnumero',
 		'order.form.email': 'Sähköposti',
@@ -211,8 +213,13 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.form.submit': 'Lähetä tilaus',
 		'order.form.total': 'Yhteensä',
 		'order.success.title': 'Kiitos tilauksestasi!',
-		'order.success.text': 'Olemme vastaanottaneet tilauksesi. Otamme sinuun yhteyttä toimituksen sopimiseksi. Maksu tapahtuu toimituksen yhteydessä.',
+		'order.success.text': 'Olemme vastaanottaneet tilauksesi. Saat vahvistusviestin sähköpostiisi.',
 		'order.error': 'Tilauksen lähetys epäonnistui. Yritä uudelleen.',
+		'order.email.subject': 'Tilausvahvistus — Aurinkotarha',
+		'order.email.thanks': 'Kiitos tilauksestasi!',
+		'order.email.summary': 'Tilauksen yhteenveto',
+
+		'order.email.contact': 'Otamme sinuun yhteyttä vahvistaaksemme toimituksen. Maksu tapahtuu toimituksen yhteydessä.',
 
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
@@ -410,6 +417,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.delivery.info': 'Gratis leverans: Esbo, Helsingfors, Vanda, Kyrkslätt',
 		'order.delivery.free': 'Gratis leverans',
 		'order.payment.info': 'Betalning vid leverans',
+		'order.form.variety': 'Sort',
+
 		'order.form.name': 'Namn',
 		'order.form.phone': 'Telefonnummer',
 		'order.form.email': 'E-post',
@@ -419,8 +428,13 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.form.submit': 'Skicka beställning',
 		'order.form.total': 'Totalt',
 		'order.success.title': 'Tack för din beställning!',
-		'order.success.text': 'Vi har tagit emot din beställning. Vi kontaktar dig för att avtala leverans. Betalning sker vid leverans.',
+		'order.success.text': 'Vi har tagit emot din beställning. Du får en bekräftelse via e-post.',
 		'order.error': 'Beställningen kunde inte skickas. Försök igen.',
+		'order.email.subject': 'Beställningsbekräftelse — Aurinkotarha',
+		'order.email.thanks': 'Tack för din beställning!',
+		'order.email.summary': 'Beställningsöversikt',
+
+		'order.email.contact': 'Vi kontaktar dig för att bekräfta leveransen. Betalning sker vid leverans.',
 
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
@@ -618,6 +632,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.delivery.info': 'Free delivery: Espoo, Helsinki, Vantaa, Kirkkonummi',
 		'order.delivery.free': 'Free delivery',
 		'order.payment.info': 'Pay on delivery',
+		'order.form.variety': 'Variety',
+
 		'order.form.name': 'Name',
 		'order.form.phone': 'Phone number',
 		'order.form.email': 'Email',
@@ -627,8 +643,13 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.form.submit': 'Submit order',
 		'order.form.total': 'Total',
 		'order.success.title': 'Thank you for your order!',
-		'order.success.text': 'We have received your order. We will contact you to arrange delivery. Payment is made upon delivery.',
+		'order.success.text': 'We have received your order. You will receive a confirmation email shortly.',
 		'order.error': 'Failed to submit order. Please try again.',
+		'order.email.subject': 'Order confirmation — Aurinkotarha',
+		'order.email.thanks': 'Thank you for your order!',
+		'order.email.summary': 'Order summary',
+
+		'order.email.contact': 'We will contact you to confirm the delivery. Payment is made upon delivery.',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',
