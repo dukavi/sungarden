@@ -111,36 +111,62 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 			'<div class="variety-img-placeholder"></div>' +
 			'<div class="variety-info">' +
 				'<div class="variety-name">' + v.name + '</div>' +
-				'<div class="variety-type">' + v.type + '</div>' +
-				'<div class="variety-pricing">' + v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg</div>' +
+				'<div class="variety-meta">' +
+					'<span class="variety-type">' + v.type + '</span>' +
+					'<span class="variety-pricing">' + v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg</span>' +
+				'</div>' +
 			'</div>' +
-			'<div class="variety-controls">' +
+			'<div class="variety-check">\u2713</div>' +
+			'<div class="variety-controls" hidden>' +
 				'<button type="button" class="qty-btn qty-minus" disabled>\u2212</button>' +
-				'<span class="qty-value">0</span>' +
+				'<span class="qty-value">1</span>' +
 				'<button type="button" class="qty-btn qty-plus">+</button>' +
 			'</div>';
 
 		var qtyVal = card.querySelector('.qty-value');
 		var minusBtn = card.querySelector('.qty-minus');
 		var plusBtn = card.querySelector('.qty-plus');
+		var controls = card.querySelector('.variety-controls');
 
 		selections[v.name] = 0;
 
-		plusBtn.addEventListener('click', function () {
-			var qty = Math.min(20, selections[v.name] + 1);
-			selections[v.name] = qty;
-			qtyVal.textContent = qty;
-			minusBtn.disabled = qty === 0;
-			card.classList.toggle('selected', qty > 0);
+		card.addEventListener('click', function (e) {
+			if (e.target.closest('.variety-controls')) return;
+			if (selections[v.name] > 0) {
+				selections[v.name] = 0;
+				card.classList.remove('selected');
+				controls.hidden = true;
+			} else {
+				selections[v.name] = 1;
+				qtyVal.textContent = '1';
+				minusBtn.disabled = true;
+				card.classList.add('selected');
+				controls.hidden = false;
+			}
 			updateTotal();
 		});
 
-		minusBtn.addEventListener('click', function () {
-			var qty = Math.max(0, selections[v.name] - 1);
+		plusBtn.addEventListener('click', function (e) {
+			e.stopPropagation();
+			var qty = Math.min(20, selections[v.name] + 1);
 			selections[v.name] = qty;
 			qtyVal.textContent = qty;
-			minusBtn.disabled = qty === 0;
-			card.classList.toggle('selected', qty > 0);
+			minusBtn.disabled = false;
+			updateTotal();
+		});
+
+		minusBtn.addEventListener('click', function (e) {
+			e.stopPropagation();
+			var qty = selections[v.name] - 1;
+			if (qty <= 0) {
+				selections[v.name] = 0;
+				card.classList.remove('selected');
+				controls.hidden = true;
+			} else {
+				selections[v.name] = qty;
+				qtyVal.textContent = qty;
+				minusBtn.disabled = qty <= 1;
+			}
 			updateTotal();
 		});
 
@@ -251,12 +277,38 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		border-radius: 12px;
 		padding: 1em;
 		transition: border-color 0.2s, box-shadow 0.2s;
+		cursor: pointer;
+		position: relative;
 		display: flex;
 		flex-direction: column;
+	}
+	.variety-card:hover {
+		border-color: var(--accent);
 	}
 	.variety-card.selected {
 		border-color: var(--accent);
 		box-shadow: 0 0 0 1px var(--accent);
+	}
+
+	.variety-check {
+		position: absolute;
+		top: 0.6em;
+		right: 0.6em;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: var(--border);
+		color: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.85rem;
+		font-weight: 700;
+		transition: background 0.2s, color 0.2s;
+	}
+	.variety-card.selected .variety-check {
+		background: var(--accent);
+		color: #fff;
 	}
 
 	.variety-img-placeholder {
@@ -269,20 +321,25 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 	.variety-info {
 		flex: 1;
-		margin-bottom: 0.8em;
+		margin-bottom: 0.5em;
 	}
 	.variety-name {
 		font-weight: 600;
 		font-size: 1.05rem;
+		margin-bottom: 0.2em;
+	}
+	.variety-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 	.variety-type {
 		font-size: 0.8rem;
 		color: var(--text-muted);
 		text-transform: capitalize;
-		margin-bottom: 0.3em;
 	}
 	.variety-pricing {
-		font-size: 0.95rem;
+		font-size: 0.9rem;
 		font-weight: 600;
 		color: var(--accent);
 	}
