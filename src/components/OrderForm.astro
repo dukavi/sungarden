@@ -129,6 +129,11 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 			});
 
 			if (res.ok) {
+				fetch(url + '/functions/v1/notify-order', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+					body: JSON.stringify(body),
+				}).catch(function () {});
 				form.hidden = true;
 				productCard.hidden = true;
 				wrapper.querySelector('.delivery-banner').hidden = true;
