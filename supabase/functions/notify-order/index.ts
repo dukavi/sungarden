@@ -47,19 +47,27 @@ const translations: Record<string, Record<string, string>> = {
 
 function customerEmail(order: Record<string, string>, t: Record<string, string>): string {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-      <h2 style="color:#6b8f71">${t.thanks}</h2>
-      <p style="color:#999;font-size:0.9em">#${order.order_id}</p>
-      <h3>${t.summary}</h3>
-      <table style="border-collapse:collapse;width:100%">
-        <tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.variety}</td><td>${order.variety}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.quantity}</td><td>${order.quantity}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.total}</td><td>${order.total_eur} €</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.address}</td><td>${order.address}, ${order.city}</td></tr>
-        ${order.notes ? `<tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.notes}</td><td>${order.notes}</td></tr>` : ""}
-      </table>
-      <p style="margin-top:1.5em;color:#666">${t.contact}</p>
-      <p style="margin-top:2em;color:#999;font-size:0.85em">— Aurinkotarha Mustio</p>
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;background:#faf8f3;border-radius:12px;overflow:hidden">
+      <div style="text-align:center;padding:2em 1em 1em">
+        <img src="https://aurinkotarha.fi/logo_round.png" alt="Aurinkotarha" width="80" height="80" style="border-radius:50%" />
+        <h1 style="font-family:Georgia,serif;color:#2c2c2c;margin:0.5em 0 0.1em;font-size:1.6em">${t.thanks}</h1>
+        <p style="color:#888;font-size:0.9em;margin:0">#${order.order_id}</p>
+      </div>
+      <div style="padding:1.5em 2em">
+        <h3 style="color:#4a7c2e;font-size:1em;margin:0 0 0.8em;text-transform:uppercase;letter-spacing:0.05em">${t.summary}</h3>
+        <table style="border-collapse:collapse;width:100%">
+          <tr><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.variety}</td><td style="padding:8px 0;font-weight:600">${order.variety}</td></tr>
+          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.quantity}</td><td style="padding:8px 0;font-weight:600">${order.quantity}</td></tr>
+          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.total}</td><td style="padding:8px 0;font-weight:600;color:#4a7c2e">${order.total_eur} €</td></tr>
+          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.address}</td><td style="padding:8px 0;font-weight:600">${order.address}, ${order.city}</td></tr>
+          ${order.notes ? `<tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.notes}</td><td style="padding:8px 0">${order.notes}</td></tr>` : ""}
+        </table>
+        <p style="margin-top:1.5em;padding:1em;background:#f0ede4;border-radius:8px;color:#555;font-size:0.9em;line-height:1.6">${t.contact}</p>
+      </div>
+      <div style="text-align:center;padding:1.5em;border-top:1px solid #e8e4da">
+        <p style="margin:0;font-family:Georgia,serif;color:#4a7c2e;font-size:1.1em;font-weight:600">Aurinkotarha Mustio</p>
+        <p style="margin:0.3em 0 0;font-size:0.85em"><a href="https://aurinkotarha.fi" style="color:#888;text-decoration:none">aurinkotarha.fi</a></p>
+      </div>
     </div>
   `;
 }
