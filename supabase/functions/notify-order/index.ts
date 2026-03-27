@@ -80,14 +80,14 @@ function adminEmail(order: Record<string, string>): string {
   `;
 }
 
-async function sendEmail(from: string, to: string, subject: string, html: string) {
+async function sendEmail(from: string, to: string, subject: string, html: string, replyTo?: string) {
   return fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${RESEND_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ from, to, subject, html }),
+    body: JSON.stringify({ from, to, subject, html, reply_to: replyTo }),
   });
 }
 
@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
 
     await Promise.all([
       sendEmail(from, ADMIN_EMAIL, `Tilaus: ${order.customer_name} — ${order.quantity} kpl`, adminEmail(order)),
-      sendEmail(from, order.email, t.subject, customerEmail(order, t)),
+      sendEmail(from, order.email, t.subject, customerEmail(order, t), ADMIN_EMAIL),
     ]);
 
     return new Response(JSON.stringify({ ok: true }), { headers: CORS });

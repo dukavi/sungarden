@@ -39,7 +39,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 			<div class="form-field">
 				<label for="variety">{t(lang, 'order.form.variety')}</label>
 				<select id="variety" name="variety" required>
-					<option value="Williams Pride">Williams Pride</option>
+					<option value="" disabled selected>...</option>
 				</select>
 			</div>
 			<div class="form-field">
@@ -91,6 +91,19 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	var key = wrapper.dataset.supabaseKey;
 	var lang = wrapper.dataset.lang;
 	var qtyInput = document.getElementById('quantity');
+	var varietySelect = document.getElementById('variety');
+
+	fetch(url + '/rest/v1/varieties?available=eq.true&select=name&order=name', {
+		headers: { 'apikey': key },
+	}).then(function (r) { return r.json(); }).then(function (rows) {
+		rows.forEach(function (v) {
+			var opt = document.createElement('option');
+			opt.value = v.name;
+			opt.textContent = v.name;
+			varietySelect.appendChild(opt);
+		});
+		if (rows.length === 1) varietySelect.value = rows[0].name;
+	});
 	var totalEl = wrapper.querySelector('.total-price');
 	var form = document.getElementById('order-form');
 	var errorEl = wrapper.querySelector('.form-error');
