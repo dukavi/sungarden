@@ -1,0 +1,321 @@
+---
+import type { Lang } from '../i18n/translations';
+import { t } from '../i18n/utils';
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const SUPABASE_URL = 'https://oopcaomsmuqituowxpwi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vcGNhb21zbXVxaXR1b3d4cHdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTU5NjUsImV4cCI6MjA4OTk5MTk2NX0.SgKEfN5Aj9Uc6dVrTIHC2IG3A-M8Iiq2KHKYMu4zYHw';
+const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
+---
+
+<div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY}>
+	<div class="product-card">
+		<div class="product-info">
+			<h2>{t(lang, 'order.product')}</h2>
+			<span class="price">{t(lang, 'order.price')}</span>
+		</div>
+		<div class="quantity-row">
+			<label for="quantity">{t(lang, 'order.quantity')}</label>
+			<input type="number" id="quantity" name="quantity" value="1" min="1" max="20" />
+		</div>
+		<div class="total-row">
+			<span>{t(lang, 'order.form.total')}:</span>
+			<span class="total-price">50 €</span>
+		</div>
+	</div>
+
+	<div class="delivery-banner">
+		<span class="delivery-free">{t(lang, 'order.delivery.free')}</span>
+		<span>{t(lang, 'order.delivery.info')}</span>
+		<span class="payment-note">{t(lang, 'order.payment.info')}</span>
+	</div>
+
+	<form id="order-form">
+		<div class="form-grid">
+			<div class="form-field">
+				<label for="name">{t(lang, 'order.form.name')}</label>
+				<input type="text" id="name" name="name" required />
+			</div>
+			<div class="form-field">
+				<label for="phone">{t(lang, 'order.form.phone')}</label>
+				<input type="tel" id="phone" name="phone" required />
+			</div>
+			<div class="form-field">
+				<label for="email">{t(lang, 'order.form.email')}</label>
+				<input type="email" id="email" name="email" required />
+			</div>
+			<div class="form-field">
+				<label for="city">{t(lang, 'order.form.city')}</label>
+				<select id="city" name="city" required>
+					{cities.map(city => <option value={city}>{city}</option>)}
+				</select>
+			</div>
+			<div class="form-field full-width">
+				<label for="address">{t(lang, 'order.form.address')}</label>
+				<input type="text" id="address" name="address" required />
+			</div>
+			<div class="form-field full-width">
+				<label for="notes">{t(lang, 'order.form.notes')}</label>
+				<textarea id="notes" name="notes" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="hp-field" aria-hidden="true">
+			<input type="text" name="website" tabindex="-1" autocomplete="off" />
+		</div>
+		<button type="submit" class="submit-btn">{t(lang, 'order.form.submit')}</button>
+		<p class="form-error" hidden>{t(lang, 'order.error')}</p>
+	</form>
+
+	<div class="success-message" hidden>
+		<h2>{t(lang, 'order.success.title')}</h2>
+		<p>{t(lang, 'order.success.text')}</p>
+	</div>
+</div>
+
+<script is:inline>
+(function () {
+	var wrapper = document.querySelector('.order-form-wrapper');
+	if (!wrapper) return;
+
+	var url = wrapper.dataset.supabaseUrl;
+	var key = wrapper.dataset.supabaseKey;
+	var qtyInput = document.getElementById('quantity');
+	var totalEl = wrapper.querySelector('.total-price');
+	var form = document.getElementById('order-form');
+	var errorEl = wrapper.querySelector('.form-error');
+	var successEl = wrapper.querySelector('.success-message');
+	var productCard = wrapper.querySelector('.product-card');
+
+	qtyInput.addEventListener('input', function () {
+		var qty = Math.max(1, Math.min(20, parseInt(this.value) || 1));
+		totalEl.textContent = (qty * 50) + ' \u20AC';
+	});
+
+	form.addEventListener('submit', async function (e) {
+		e.preventDefault();
+		errorEl.hidden = true;
+
+		if (form.website.value) return;
+
+		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
+		var body = {
+			customer_name: form.name.value.trim(),
+			phone: form.phone.value.trim(),
+			email: form.email.value.trim(),
+			address: form.address.value.trim(),
+			city: form.city.value,
+			quantity: qty,
+			total_eur: qty * 50,
+			notes: form.notes.value.trim() || null,
+		};
+
+		var btn = form.querySelector('.submit-btn');
+		btn.disabled = true;
+
+		try {
+			var res = await fetch(url + '/rest/v1/orders', {
+				method: 'POST',
+				headers: {
+					'apikey': key,
+					'Authorization': 'Bearer ' + key,
+					'Content-Type': 'application/json',
+					'Prefer': 'return=minimal',
+				},
+				body: JSON.stringify(body),
+			});
+
+			if (res.ok) {
+				form.hidden = true;
+				productCard.hidden = true;
+				wrapper.querySelector('.delivery-banner').hidden = true;
+				successEl.hidden = false;
+			} else {
+				errorEl.hidden = false;
+				btn.disabled = false;
+			}
+		} catch (err) {
+			errorEl.hidden = false;
+			btn.disabled = false;
+		}
+	});
+})();
+</script>
+
+<style>
+	.order-form-wrapper {
+		max-width: 640px;
+		margin: 0 auto;
+	}
+
+	.product-card {
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 1.5em;
+		margin-bottom: 1.5em;
+	}
+	.product-info {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1em;
+	}
+	.product-info h2 {
+		margin: 0;
+		font-size: 1.2rem;
+	}
+	.price {
+		font-size: 1.4rem;
+		font-weight: 700;
+		color: var(--accent);
+	}
+	.quantity-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1em;
+	}
+	.quantity-row input {
+		width: 80px;
+		padding: 0.5em;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		font-size: 1rem;
+		text-align: center;
+		background: var(--bg);
+		color: var(--text);
+	}
+	.total-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 1em;
+		border-top: 1px solid var(--border);
+		font-weight: 600;
+	}
+	.total-price {
+		font-size: 1.3rem;
+		color: var(--accent);
+	}
+
+	.delivery-banner {
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 1em 1.5em;
+		margin-bottom: 2em;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em 1.5em;
+		align-items: center;
+		font-size: 0.9rem;
+		color: var(--text-muted);
+	}
+	.delivery-free {
+		background: var(--green, #6b8f71);
+		color: #fff;
+		padding: 0.2em 0.6em;
+		border-radius: 4px;
+		font-weight: 600;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+	.payment-note {
+		margin-left: auto;
+	}
+
+	#order-form {
+		margin-bottom: 2em;
+	}
+	.form-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1em;
+	}
+	.form-field.full-width {
+		grid-column: 1 / -1;
+	}
+	.form-field label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin-bottom: 0.3em;
+	}
+	.form-field input,
+	.form-field select,
+	.form-field textarea {
+		width: 100%;
+		padding: 0.6em 0.8em;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		font-size: 1rem;
+		background: var(--bg);
+		color: var(--text);
+		font-family: inherit;
+		box-sizing: border-box;
+	}
+	.form-field textarea {
+		resize: vertical;
+	}
+
+	.hp-field {
+		position: absolute;
+		left: -9999px;
+	}
+
+	.submit-btn {
+		display: block;
+		width: 100%;
+		margin-top: 1.5em;
+		padding: 0.8em;
+		border: none;
+		border-radius: 8px;
+		background: var(--accent);
+		color: #fff;
+		font-size: 1.05rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+	.submit-btn:hover {
+		opacity: 0.85;
+	}
+	.submit-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.form-error {
+		color: #c0392b;
+		text-align: center;
+		margin-top: 1em;
+	}
+
+	.success-message {
+		text-align: center;
+		padding: 3em 1em;
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+	}
+	.success-message h2 {
+		color: var(--green, #6b8f71);
+	}
+	.success-message p {
+		color: var(--text-muted);
+		max-width: 440px;
+		margin: 0.5em auto 0;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 720px) {
+		.form-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
