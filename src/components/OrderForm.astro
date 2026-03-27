@@ -14,9 +14,12 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 <div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY} data-lang={lang}>
 	<div class="product-card">
-		<div class="product-info">
-			<h2>{t(lang, 'order.product')}</h2>
-			<span class="price">{t(lang, 'order.price')}</span>
+		<div class="variety-section">
+			<label for="variety">{t(lang, 'order.form.variety')}</label>
+			<select id="variety" name="variety" required>
+				<option value="" disabled selected>...</option>
+			</select>
+			<span class="variety-price"></span>
 		</div>
 		<div class="quantity-row">
 			<label for="quantity">{t(lang, 'order.quantity')}</label>
@@ -24,7 +27,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		</div>
 		<div class="total-row">
 			<span>{t(lang, 'order.form.total')}:</span>
-			<span class="total-price">50 €</span>
+			<span class="total-price">—</span>
 		</div>
 	</div>
 
@@ -35,13 +38,6 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	</div>
 
 	<form id="order-form">
-		<div class="form-grid">
-			<div class="form-field">
-				<label for="variety">{t(lang, 'order.form.variety')}</label>
-				<select id="variety" name="variety" required>
-					<option value="" disabled selected>...</option>
-				</select>
-			</div>
 			<div class="form-field">
 				<label for="name">{t(lang, 'order.form.name')}</label>
 				<input type="text" id="name" name="name" required />
@@ -92,28 +88,59 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	var lang = wrapper.dataset.lang;
 	var qtyInput = document.getElementById('quantity');
 	var varietySelect = document.getElementById('variety');
-
-	fetch(url + '/rest/v1/varieties?available=eq.true&select=name&order=name', {
-		headers: { 'apikey': key },
-	}).then(function (r) { return r.json(); }).then(function (rows) {
-		rows.forEach(function (v) {
-			var opt = document.createElement('option');
-			opt.value = v.name;
-			opt.textContent = v.name;
-			varietySelect.appendChild(opt);
-		});
-		if (rows.length === 1) varietySelect.value = rows[0].name;
-	});
+	var varietyPriceEl = wrapper.querySelector('.variety-price');
 	var totalEl = wrapper.querySelector('.total-price');
 	var form = document.getElementById('order-form');
 	var errorEl = wrapper.querySelector('.form-error');
 	var successEl = wrapper.querySelector('.success-message');
 	var productCard = wrapper.querySelector('.product-card');
+	var varieties = [];
 
-	qtyInput.addEventListener('input', function () {
-		var qty = Math.max(1, Math.min(20, parseInt(this.value) || 1));
-		totalEl.textContent = (qty * 50) + ' \u20AC';
+	function getSelected() {
+		var name = varietySelect.value;
+		for (var i = 0; i < varieties.length; i++) {
+			if (varieties[i].name === name) return varieties[i];
+		}
+		return null;
+	}
+
+	function updateTotal() {
+		var v = getSelected();
+		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
+		if (v) {
+			varietyPriceEl.textContent = v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg';
+			totalEl.textContent = (qty * v.price_per_box) + ' \u20AC';
+		} else {
+			varietyPriceEl.textContent = '';
+			totalEl.textContent = '\u2014';
+		}
+	}
+
+	fetch(url + '/rest/v1/varieties?available=eq.true&select=name,type,price_per_kg,price_per_box,box_weight_kg&order=type,name', {
+		headers: { 'apikey': key },
+	}).then(function (r) { return r.json(); }).then(function (rows) {
+		varieties = rows;
+		var currentType = '';
+		rows.forEach(function (v) {
+			if (v.type !== currentType) {
+				var group = document.createElement('optgroup');
+				group.label = v.type.charAt(0).toUpperCase() + v.type.slice(1);
+				varietySelect.appendChild(group);
+				currentType = v.type;
+			}
+			var opt = document.createElement('option');
+			opt.value = v.name;
+			opt.textContent = v.name + ' — ' + v.price_per_box + ' \u20AC';
+			varietySelect.lastChild.appendChild(opt);
+		});
+		if (rows.length === 1) {
+			varietySelect.value = rows[0].name;
+			updateTotal();
+		}
 	});
+
+	varietySelect.addEventListener('change', updateTotal);
+	qtyInput.addEventListener('input', updateTotal);
 
 	form.addEventListener('submit', async function (e) {
 		e.preventDefault();
@@ -123,15 +150,17 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 		var fd = new FormData(form);
 		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
+		var v = getSelected();
+		var pricePerBox = v ? v.price_per_box : 0;
 		var body = {
 			customer_name: fd.get('name'),
 			phone: fd.get('phone'),
 			email: fd.get('email'),
 			address: fd.get('address'),
 			city: fd.get('city'),
-			variety: fd.get('variety'),
+			variety: varietySelect.value,
 			quantity: qty,
-			total_eur: qty * 50,
+			total_eur: qty * pricePerBox,
 			notes: fd.get('notes') || null,
 		};
 
@@ -187,20 +216,31 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		padding: 1.5em;
 		margin-bottom: 1.5em;
 	}
-	.product-info {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	.variety-section {
 		margin-bottom: 1em;
 	}
-	.product-info h2 {
-		margin: 0;
-		font-size: 1.2rem;
+	.variety-section label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin-bottom: 0.3em;
 	}
-	.price {
-		font-size: 1.4rem;
-		font-weight: 700;
-		color: var(--accent);
+	.variety-section select {
+		width: 100%;
+		padding: 0.6em 0.8em;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		font-size: 1rem;
+		background: var(--bg);
+		color: var(--text);
+		font-family: inherit;
+		box-sizing: border-box;
+	}
+	.variety-price {
+		display: block;
+		margin-top: 0.4em;
+		font-size: 0.85rem;
+		color: var(--text-muted);
 	}
 	.quantity-row {
 		display: flex;
