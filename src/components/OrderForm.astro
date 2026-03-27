@@ -1,5 +1,6 @@
 ---
 import type { Lang } from '../i18n/translations';
+import { translations } from '../i18n/translations';
 import { t } from '../i18n/utils';
 
 interface Props {
@@ -10,11 +11,28 @@ const { lang } = Astro.props;
 const SUPABASE_URL = 'https://oopcaomsmuqituowxpwi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vcGNhb21zbXVxaXR1b3d4cHdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTU5NjUsImV4cCI6MjA4OTk5MTk2NX0.SgKEfN5Aj9Uc6dVrTIHC2IG3A-M8Iiq2KHKYMu4zYHw';
 const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
+
+// Build variety description map from translations
+const descMap: Record<string, string> = {};
+const langTranslations = translations[lang];
+for (const key of Object.keys(langTranslations)) {
+	const match = key.match(/^order\.variety\.(.+)\.desc$/);
+	if (match) {
+		descMap[match[1]] = langTranslations[key];
+	}
+}
 ---
 
-<div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY} data-lang={lang}>
+<div class="order-form-wrapper"
+	data-supabase-url={SUPABASE_URL}
+	data-supabase-key={SUPABASE_KEY}
+	data-lang={lang}
+	data-descriptions={JSON.stringify(descMap)}
+	data-box-label={t(lang, 'order.form.box')}
+	data-boxes-label={t(lang, 'order.form.boxes')}
+>
 	<h2 class="section-title">{t(lang, 'order.form.variety')}</h2>
-	<div class="variety-grid" id="variety-grid"></div>
+	<div class="variety-list" id="variety-list"></div>
 
 	<div class="order-summary" id="order-summary" hidden>
 		<div class="summary-header">
@@ -79,7 +97,10 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	var url = wrapper.dataset.supabaseUrl;
 	var key = wrapper.dataset.supabaseKey;
 	var lang = wrapper.dataset.lang;
-	var grid = document.getElementById('variety-grid');
+	var descriptions = JSON.parse(wrapper.dataset.descriptions || '{}');
+	var boxLabel = wrapper.dataset.boxLabel || 'box';
+	var boxesLabel = wrapper.dataset.boxesLabel || 'boxes';
+	var list = document.getElementById('variety-list');
 	var summaryEl = document.getElementById('order-summary');
 	var totalEl = wrapper.querySelector('.total-price');
 	var form = document.getElementById('order-form');
@@ -88,6 +109,10 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	var successEl = wrapper.querySelector('.success-message');
 	var varieties = [];
 	var selections = {};
+
+	function slugify(name) {
+		return name.toLowerCase().replace(/\s+/g, '-');
+	}
 
 	function updateTotal() {
 		var total = 0;
@@ -105,46 +130,36 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	}
 
 	function renderCard(v) {
+		var slug = slugify(v.name);
+		var desc = descriptions[slug] || '';
+		var imgSrc = v.image_filename ? '/images/varieties/' + v.image_filename : '';
+
 		var card = document.createElement('div');
 		card.className = 'variety-card';
 		card.innerHTML =
-			'<div class="variety-img-placeholder"></div>' +
-			'<div class="variety-info">' +
+			(imgSrc
+				? '<img class="variety-img" src="' + imgSrc + '" alt="' + v.name + '" />'
+				: '<div class="variety-img variety-img-placeholder"></div>') +
+			'<div class="variety-body">' +
 				'<div class="variety-name">' + v.name + '</div>' +
-				'<div class="variety-meta">' +
-					'<span class="variety-type">' + v.type + '</span>' +
-					'<span class="variety-pricing">' + v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg</span>' +
-				'</div>' +
+				(desc ? '<div class="variety-desc">' + desc + '</div>' : '') +
+				'<div class="variety-pricing">' + v.price_per_box + ' \u20AC / 1 ' + boxLabel + ' (' + v.box_weight_kg + ' kg)</div>' +
 			'</div>' +
-			'<div class="variety-check">\u2713</div>' +
-			'<div class="variety-controls" hidden>' +
-				'<button type="button" class="qty-btn qty-minus" disabled>\u2212</button>' +
-				'<span class="qty-value">1</span>' +
-				'<button type="button" class="qty-btn qty-plus">+</button>' +
+			'<div class="variety-qty">' +
+				'<div class="variety-controls">' +
+					'<button type="button" class="qty-btn qty-minus" disabled>\u2212</button>' +
+					'<span class="qty-value">0</span>' +
+					'<button type="button" class="qty-btn qty-plus">+</button>' +
+				'</div>' +
+				'<div class="qty-label-text">' + boxesLabel + '</div>' +
 			'</div>';
 
+		var controls = card.querySelector('.variety-controls');
 		var qtyVal = card.querySelector('.qty-value');
 		var minusBtn = card.querySelector('.qty-minus');
 		var plusBtn = card.querySelector('.qty-plus');
-		var controls = card.querySelector('.variety-controls');
 
 		selections[v.name] = 0;
-
-		card.addEventListener('click', function (e) {
-			if (e.target.closest('.variety-controls')) return;
-			if (selections[v.name] > 0) {
-				selections[v.name] = 0;
-				card.classList.remove('selected');
-				controls.hidden = true;
-			} else {
-				selections[v.name] = 1;
-				qtyVal.textContent = '1';
-				minusBtn.disabled = true;
-				card.classList.add('selected');
-				controls.hidden = false;
-			}
-			updateTotal();
-		});
 
 		plusBtn.addEventListener('click', function (e) {
 			e.stopPropagation();
@@ -152,33 +167,29 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 			selections[v.name] = qty;
 			qtyVal.textContent = qty;
 			minusBtn.disabled = false;
+			if (qty > 0) card.classList.add('selected');
 			updateTotal();
 		});
 
 		minusBtn.addEventListener('click', function (e) {
 			e.stopPropagation();
-			var qty = selections[v.name] - 1;
-			if (qty <= 0) {
-				selections[v.name] = 0;
-				card.classList.remove('selected');
-				controls.hidden = true;
-			} else {
-				selections[v.name] = qty;
-				qtyVal.textContent = qty;
-				minusBtn.disabled = qty <= 1;
-			}
+			var qty = Math.max(0, selections[v.name] - 1);
+			selections[v.name] = qty;
+			qtyVal.textContent = qty;
+			minusBtn.disabled = qty <= 0;
+			if (qty === 0) card.classList.remove('selected');
 			updateTotal();
 		});
 
 		return card;
 	}
 
-	fetch(url + '/rest/v1/varieties?available=eq.true&select=name,type,price_per_kg,price_per_box,box_weight_kg&order=type,name', {
+	fetch(url + '/rest/v1/varieties?available=eq.true&select=name,type,price_per_kg,price_per_box,box_weight_kg,image_filename&order=type,name', {
 		headers: { 'apikey': key },
 	}).then(function (r) { return r.json(); }).then(function (rows) {
 		varieties = rows;
 		rows.forEach(function (v) {
-			grid.appendChild(renderCard(v));
+			list.appendChild(renderCard(v));
 		});
 	});
 
@@ -237,7 +248,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 					body: JSON.stringify(Object.assign({ lang: lang, order_id: orderId, items: items }, body)),
 				}).catch(function () {});
 				form.hidden = true;
-				grid.hidden = true;
+				list.hidden = true;
 				summaryEl.hidden = true;
 				wrapper.querySelector('.delivery-banner').hidden = true;
 				wrapper.querySelector('.section-title').hidden = true;
@@ -254,20 +265,21 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 })();
 </script>
 
-<style>
+<style is:global>
 	.order-form-wrapper {
 		max-width: 720px;
 		margin: 0 auto;
 	}
 
-	.section-title {
+	.order-form-wrapper .section-title {
 		margin-bottom: 0.8em;
 	}
 
-	.variety-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		gap: 1em;
+	/* Variety cards — stacked list */
+	.variety-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75em;
 		margin-bottom: 1.5em;
 	}
 
@@ -275,91 +287,77 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		background: var(--card-bg);
 		border: 2px solid var(--border);
 		border-radius: 12px;
-		padding: 1em;
-		transition: border-color 0.2s, box-shadow 0.2s;
+		padding: 0.8em;
 		cursor: pointer;
-		position: relative;
+		transition: border-color 0.2s, box-shadow 0.2s;
 		display: flex;
-		flex-direction: column;
+		align-items: center;
+		gap: 0.8em;
 	}
 	.variety-card:hover {
-		border-color: var(--accent);
+		border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
 	}
 	.variety-card.selected {
 		border-color: var(--accent);
 		box-shadow: 0 0 0 1px var(--accent);
 	}
 
-	.variety-check {
-		position: absolute;
-		top: 0.6em;
-		right: 0.6em;
-		width: 26px;
-		height: 26px;
-		border-radius: 50%;
-		background: var(--border);
-		color: transparent;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.85rem;
-		font-weight: 700;
-		transition: background 0.2s, color 0.2s;
-	}
-	.variety-card.selected .variety-check {
-		background: var(--accent);
-		color: #fff;
-	}
-
-	.variety-img-placeholder {
-		width: 100%;
-		aspect-ratio: 4/3;
-		background: var(--bg-alt, #f2efe6);
+	/* Photo */
+	.variety-img {
+		width: 48px;
+		height: 48px;
 		border-radius: 8px;
-		margin-bottom: 0.8em;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+	.variety-img-placeholder {
+		background: var(--bg-alt, #f2efe6);
+		width: 48px;
+		height: 48px;
+		border-radius: 8px;
 	}
 
-	.variety-info {
+	/* Description */
+	.variety-body {
 		flex: 1;
-		margin-bottom: 0.5em;
+		min-width: 0;
 	}
 	.variety-name {
 		font-weight: 600;
-		font-size: 1.05rem;
-		margin-bottom: 0.2em;
+		font-size: 1rem;
 	}
-	.variety-meta {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.variety-type {
-		font-size: 0.8rem;
+	.variety-desc {
+		font-size: 0.82rem;
 		color: var(--text-muted);
-		text-transform: capitalize;
+		line-height: 1.4;
+		margin: 0.15em 0;
 	}
 	.variety-pricing {
-		font-size: 0.9rem;
+		font-size: 0.88rem;
 		font-weight: 600;
 		color: var(--accent);
 	}
 
+	/* Quantity — right side */
+	.variety-qty {
+		flex-shrink: 0;
+		text-align: center;
+		min-width: 90px;
+	}
 	.variety-controls {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.8em;
-		padding-top: 0.8em;
-		border-top: 1px solid var(--border);
+		gap: 0.4em;
 	}
 	.qty-btn {
-		width: 32px;
-		height: 32px;
+		width: 28px;
+		height: 28px;
 		border: 1px solid var(--border);
 		border-radius: 6px;
 		background: var(--bg);
 		color: var(--text);
-		font-size: 1.1rem;
+		font-size: 1rem;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
@@ -375,30 +373,37 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	}
 	.qty-value {
 		font-weight: 600;
-		font-size: 1.1rem;
-		min-width: 1.5em;
+		font-size: 1rem;
+		min-width: 1.2em;
 		text-align: center;
 	}
+	.qty-label-text {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		margin-top: 0.2em;
+	}
 
-	.order-summary {
+	/* Summary */
+	.order-form-wrapper .order-summary {
 		background: var(--card-bg);
 		border: 1px solid var(--border);
 		border-radius: 12px;
 		padding: 1em 1.5em;
 		margin-bottom: 1.5em;
 	}
-	.summary-header {
+	.order-form-wrapper .summary-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		font-weight: 600;
 	}
-	.total-price {
+	.order-form-wrapper .total-price {
 		font-size: 1.3rem;
 		color: var(--accent);
 	}
 
-	.delivery-banner {
+	/* Delivery banner */
+	.order-form-wrapper .delivery-banner {
 		background: var(--card-bg);
 		border: 1px solid var(--border);
 		border-radius: 12px;
@@ -411,7 +416,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		font-size: 0.9rem;
 		color: var(--text-muted);
 	}
-	.delivery-free {
+	.order-form-wrapper .delivery-free {
 		background: var(--green, #6b8f71);
 		color: #fff;
 		padding: 0.2em 0.6em;
@@ -421,30 +426,31 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 	}
-	.payment-note {
+	.order-form-wrapper .payment-note {
 		margin-left: auto;
 	}
 
-	#order-form {
+	/* Form */
+	.order-form-wrapper #order-form {
 		margin-bottom: 2em;
 	}
-	.form-grid {
+	.order-form-wrapper .form-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1em;
 	}
-	.form-field.full-width {
+	.order-form-wrapper .form-field.full-width {
 		grid-column: 1 / -1;
 	}
-	.form-field label {
+	.order-form-wrapper .form-field label {
 		display: block;
 		font-size: 0.85rem;
 		font-weight: 600;
 		margin-bottom: 0.3em;
 	}
-	.form-field input,
-	.form-field select,
-	.form-field textarea {
+	.order-form-wrapper .form-field input,
+	.order-form-wrapper .form-field select,
+	.order-form-wrapper .form-field textarea {
 		width: 100%;
 		padding: 0.6em 0.8em;
 		border: 1px solid var(--border);
@@ -455,16 +461,16 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		font-family: inherit;
 		box-sizing: border-box;
 	}
-	.form-field textarea {
+	.order-form-wrapper .form-field textarea {
 		resize: vertical;
 	}
 
-	.hp-field {
+	.order-form-wrapper .hp-field {
 		position: absolute;
 		left: -9999px;
 	}
 
-	.submit-btn {
+	.order-form-wrapper .submit-btn {
 		display: block;
 		width: 100%;
 		margin-top: 1.5em;
@@ -478,47 +484,50 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		cursor: pointer;
 		transition: opacity 0.2s;
 	}
-	.submit-btn:hover:not(:disabled) {
+	.order-form-wrapper .submit-btn:hover:not(:disabled) {
 		opacity: 0.85;
 	}
-	.submit-btn:disabled {
+	.order-form-wrapper .submit-btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
 	}
 
-	.form-error {
+	.order-form-wrapper .form-error {
 		color: #c0392b;
 		text-align: center;
 		margin-top: 1em;
 	}
 
-	.success-message {
+	.order-form-wrapper .success-message {
 		text-align: center;
 		padding: 3em 1em;
 		background: var(--card-bg);
 		border: 1px solid var(--border);
 		border-radius: 12px;
 	}
-	.success-message h2 {
+	.order-form-wrapper .success-message h2 {
 		color: var(--green, #6b8f71);
 	}
-	.success-message p {
+	.order-form-wrapper .success-message p {
 		color: var(--text-muted);
 		max-width: 440px;
 		margin: 0.5em auto 0;
 		line-height: 1.6;
 	}
 
-	@media (max-width: 720px) {
-		.variety-grid {
-			grid-template-columns: 1fr 1fr;
+	/* Mobile */
+	@media (max-width: 520px) {
+		.variety-card {
+			padding: 0.6em;
+			gap: 0.6em;
 		}
-		.form-grid {
-			grid-template-columns: 1fr;
+		.variety-desc {
+			display: none;
 		}
-	}
-	@media (max-width: 440px) {
-		.variety-grid {
+		.variety-qty {
+			min-width: 70px;
+		}
+		.order-form-wrapper .form-grid {
 			grid-template-columns: 1fr;
 		}
 	}
