@@ -49,6 +49,7 @@ function customerEmail(order: Record<string, string>, t: Record<string, string>)
   return `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
       <h2 style="color:#6b8f71">${t.thanks}</h2>
+      <p style="color:#999;font-size:0.9em">#${order.order_id}</p>
       <h3>${t.summary}</h3>
       <table style="border-collapse:collapse;width:100%">
         <tr><td style="padding:6px 12px 6px 0;font-weight:bold">${t.variety}</td><td>${order.variety}</td></tr>
@@ -65,7 +66,7 @@ function customerEmail(order: Record<string, string>, t: Record<string, string>)
 
 function adminEmail(order: Record<string, string>): string {
   return `
-    <h2>Uusi tilaus / New order</h2>
+    <h2>Uusi tilaus / New order #${order.order_id}</h2>
     <table style="border-collapse:collapse">
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Nimi</td><td>${order.customer_name}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Puhelin</td><td>${order.phone}</td></tr>

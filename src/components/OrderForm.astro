@@ -145,16 +145,18 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 					'apikey': key,
 					'Authorization': 'Bearer ' + key,
 					'Content-Type': 'application/json',
-					'Prefer': 'return=minimal',
+					'Prefer': 'return=representation',
 				},
 				body: JSON.stringify(body),
 			});
 
 			if (res.ok) {
+				var rows = await res.json();
+				var orderId = rows[0] && rows[0].id;
 				fetch(url + '/functions/v1/notify-order', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-					body: JSON.stringify(Object.assign({ lang: lang }, body)),
+					body: JSON.stringify(Object.assign({ lang: lang, order_id: orderId }, body)),
 				}).catch(function () {});
 				form.hidden = true;
 				productCard.hidden = true;
