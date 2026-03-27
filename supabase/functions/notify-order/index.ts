@@ -3,15 +3,21 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const ADMIN_EMAIL = "dukavia@gmail.com";
 
+interface OrderItem {
+  variety: string;
+  quantity: number;
+  price_per_box: number;
+  subtotal: number;
+}
+
 const translations: Record<string, Record<string, string>> = {
   fi: {
     subject: "Tilausvahvistus — Aurinkotarha",
     thanks: "Kiitos tilauksestasi!",
     summary: "Tilauksen yhteenveto",
     variety: "Lajike",
-    quantity: "Määrä",
+    boxes: "laatikkoa",
     total: "Yhteensä",
-
     address: "Toimitusosoite",
     notes: "Lisätietoja",
     contact:
@@ -22,9 +28,8 @@ const translations: Record<string, Record<string, string>> = {
     thanks: "Tack för din beställning!",
     summary: "Beställningsöversikt",
     variety: "Sort",
-    quantity: "Antal",
+    boxes: "lådor",
     total: "Totalt",
-
     address: "Leveransadress",
     notes: "Ytterligare information",
     contact:
@@ -35,9 +40,8 @@ const translations: Record<string, Record<string, string>> = {
     thanks: "Thank you for your order!",
     summary: "Order summary",
     variety: "Variety",
-    quantity: "Quantity",
+    boxes: "boxes",
     total: "Total",
-
     address: "Delivery address",
     notes: "Notes",
     contact:
@@ -45,7 +49,33 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
-function customerEmail(order: Record<string, string>, t: Record<string, string>): string {
+function itemRows(items: OrderItem[], t: Record<string, string>): string {
+  return items
+    .map(
+      (i) =>
+        `<tr style="border-top:1px solid #e8e4da">
+          <td style="padding:8px 12px 8px 0;font-weight:600">${i.variety}</td>
+          <td style="padding:8px 8px 8px 0;color:#666">${i.quantity} ${t.boxes}</td>
+          <td style="padding:8px 0;font-weight:600;text-align:right">${i.subtotal} €</td>
+        </tr>`
+    )
+    .join("");
+}
+
+function adminItemRows(items: OrderItem[]): string {
+  return items
+    .map(
+      (i) =>
+        `<tr><td style="padding:4px 12px 4px 0">${i.variety}</td><td>${i.quantity} kpl</td><td>${i.subtotal} €</td></tr>`
+    )
+    .join("");
+}
+
+function customerEmail(
+  order: Record<string, any>,
+  t: Record<string, string>
+): string {
+  const items: OrderItem[] = order.items || [];
   return `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto;background:#faf8f3;border-radius:12px;overflow:hidden">
       <div style="text-align:center;padding:2em 1em 1em">
@@ -56,11 +86,16 @@ function customerEmail(order: Record<string, string>, t: Record<string, string>)
       <div style="padding:1.5em 2em">
         <h3 style="color:#4a7c2e;font-size:1em;margin:0 0 0.8em;text-transform:uppercase;letter-spacing:0.05em">${t.summary}</h3>
         <table style="border-collapse:collapse;width:100%">
-          <tr><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.variety}</td><td style="padding:8px 0;font-weight:600">${order.variety}</td></tr>
-          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.quantity}</td><td style="padding:8px 0;font-weight:600">${order.quantity}</td></tr>
-          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.total}</td><td style="padding:8px 0;font-weight:600;color:#4a7c2e">${order.total_eur} €</td></tr>
-          <tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.address}</td><td style="padding:8px 0;font-weight:600">${order.address}, ${order.city}</td></tr>
-          ${order.notes ? `<tr style="border-top:1px solid #e8e4da"><td style="padding:8px 12px 8px 0;color:#666;font-size:0.9em">${t.notes}</td><td style="padding:8px 0">${order.notes}</td></tr>` : ""}
+          ${itemRows(items, t)}
+          <tr style="border-top:2px solid #4a7c2e">
+            <td style="padding:10px 12px 10px 0;font-weight:700">${t.total}</td>
+            <td></td>
+            <td style="padding:10px 0;font-weight:700;color:#4a7c2e;text-align:right;font-size:1.1em">${order.total_eur} €</td>
+          </tr>
+        </table>
+        <table style="border-collapse:collapse;width:100%;margin-top:1em">
+          <tr><td style="padding:6px 12px 6px 0;color:#666;font-size:0.9em">${t.address}</td><td style="padding:6px 0;font-weight:600">${order.address}, ${order.city}</td></tr>
+          ${order.notes ? `<tr style="border-top:1px solid #e8e4da"><td style="padding:6px 12px 6px 0;color:#666;font-size:0.9em">${t.notes}</td><td style="padding:6px 0">${order.notes}</td></tr>` : ""}
         </table>
         <p style="margin-top:1.5em;padding:1em;background:#f0ede4;border-radius:8px;color:#555;font-size:0.9em;line-height:1.6">${t.contact}</p>
       </div>
@@ -72,24 +107,33 @@ function customerEmail(order: Record<string, string>, t: Record<string, string>)
   `;
 }
 
-function adminEmail(order: Record<string, string>): string {
+function adminEmail(order: Record<string, any>): string {
+  const items: OrderItem[] = order.items || [];
   return `
     <h2>Uusi tilaus / New order #${order.order_id}</h2>
     <table style="border-collapse:collapse">
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Nimi</td><td>${order.customer_name}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Puhelin</td><td>${order.phone}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Email</td><td>${order.email}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Lajike</td><td>${order.variety}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Kaupunki</td><td>${order.city}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Osoite</td><td>${order.address}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Määrä</td><td>${order.quantity} kpl</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Yhteensä</td><td>${order.total_eur} €</td></tr>
       ${order.notes ? `<tr><td style="padding:4px 12px 4px 0;font-weight:bold">Huomautukset</td><td>${order.notes}</td></tr>` : ""}
+    </table>
+    <h3>Tuotteet</h3>
+    <table style="border-collapse:collapse">
+      ${adminItemRows(items)}
+      <tr style="border-top:2px solid #333"><td style="padding:4px 12px 4px 0;font-weight:bold">Yhteensä</td><td></td><td style="font-weight:bold">${order.total_eur} €</td></tr>
     </table>
   `;
 }
 
-async function sendEmail(from: string, to: string, subject: string, html: string, replyTo?: string) {
+async function sendEmail(
+  from: string,
+  to: string,
+  subject: string,
+  html: string,
+  replyTo?: string
+) {
   return fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -120,8 +164,19 @@ Deno.serve(async (req) => {
     const from = "Aurinkotarha <orders@aurinkotarha.fi>";
 
     await Promise.all([
-      sendEmail(from, ADMIN_EMAIL, `Tilaus: ${order.customer_name} — ${order.quantity} kpl`, adminEmail(order)),
-      sendEmail(from, order.email, t.subject, customerEmail(order, t), ADMIN_EMAIL),
+      sendEmail(
+        from,
+        ADMIN_EMAIL,
+        `Tilaus #${order.order_id}: ${order.customer_name} — ${order.total_eur} €`,
+        adminEmail(order)
+      ),
+      sendEmail(
+        from,
+        order.email,
+        t.subject,
+        customerEmail(order, t),
+        ADMIN_EMAIL
+      ),
     ]);
 
     return new Response(JSON.stringify({ ok: true }), { headers: CORS });

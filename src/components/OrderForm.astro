@@ -13,21 +13,13 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 ---
 
 <div class="order-form-wrapper" data-supabase-url={SUPABASE_URL} data-supabase-key={SUPABASE_KEY} data-lang={lang}>
-	<div class="product-card">
-		<div class="variety-section">
-			<label for="variety">{t(lang, 'order.form.variety')}</label>
-			<select id="variety" name="variety" required>
-				<option value="" disabled selected>...</option>
-			</select>
-			<span class="variety-price"></span>
-		</div>
-		<div class="quantity-row">
-			<label for="quantity">{t(lang, 'order.quantity')}</label>
-			<input type="number" id="quantity" name="quantity" value="1" min="1" max="20" />
-		</div>
-		<div class="total-row">
+	<h2 class="section-title">{t(lang, 'order.form.variety')}</h2>
+	<div class="variety-grid" id="variety-grid"></div>
+
+	<div class="order-summary" id="order-summary" hidden>
+		<div class="summary-header">
 			<span>{t(lang, 'order.form.total')}:</span>
-			<span class="total-price">—</span>
+			<span class="total-price">0 €</span>
 		</div>
 	</div>
 
@@ -38,6 +30,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	</div>
 
 	<form id="order-form">
+		<div class="form-grid">
 			<div class="form-field">
 				<label for="name">{t(lang, 'order.form.name')}</label>
 				<input type="text" id="name" name="name" required />
@@ -68,7 +61,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		<div class="hp-field" aria-hidden="true">
 			<input type="text" name="website" tabindex="-1" autocomplete="off" />
 		</div>
-		<button type="submit" class="submit-btn">{t(lang, 'order.form.submit')}</button>
+		<button type="submit" class="submit-btn" disabled>{t(lang, 'order.form.submit')}</button>
 		<p class="form-error" hidden>{t(lang, 'order.error')}</p>
 	</form>
 
@@ -86,61 +79,82 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	var url = wrapper.dataset.supabaseUrl;
 	var key = wrapper.dataset.supabaseKey;
 	var lang = wrapper.dataset.lang;
-	var qtyInput = document.getElementById('quantity');
-	var varietySelect = document.getElementById('variety');
-	var varietyPriceEl = wrapper.querySelector('.variety-price');
+	var grid = document.getElementById('variety-grid');
+	var summaryEl = document.getElementById('order-summary');
 	var totalEl = wrapper.querySelector('.total-price');
 	var form = document.getElementById('order-form');
+	var submitBtn = form.querySelector('.submit-btn');
 	var errorEl = wrapper.querySelector('.form-error');
 	var successEl = wrapper.querySelector('.success-message');
-	var productCard = wrapper.querySelector('.product-card');
 	var varieties = [];
-
-	function getSelected() {
-		var name = varietySelect.value;
-		for (var i = 0; i < varieties.length; i++) {
-			if (varieties[i].name === name) return varieties[i];
-		}
-		return null;
-	}
+	var selections = {};
 
 	function updateTotal() {
-		var v = getSelected();
-		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
-		if (v) {
-			varietyPriceEl.textContent = v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg';
-			totalEl.textContent = (qty * v.price_per_box) + ' \u20AC';
-		} else {
-			varietyPriceEl.textContent = '';
-			totalEl.textContent = '\u2014';
+		var total = 0;
+		var hasItems = false;
+		for (var name in selections) {
+			if (selections[name] > 0) {
+				hasItems = true;
+				var v = varieties.find(function (x) { return x.name === name; });
+				if (v) total += selections[name] * v.price_per_box;
+			}
 		}
+		totalEl.textContent = total + ' \u20AC';
+		summaryEl.hidden = !hasItems;
+		submitBtn.disabled = !hasItems;
+	}
+
+	function renderCard(v) {
+		var card = document.createElement('div');
+		card.className = 'variety-card';
+		card.innerHTML =
+			'<div class="variety-img-placeholder"></div>' +
+			'<div class="variety-info">' +
+				'<div class="variety-name">' + v.name + '</div>' +
+				'<div class="variety-type">' + v.type + '</div>' +
+				'<div class="variety-pricing">' + v.price_per_box + ' \u20AC / ' + v.box_weight_kg + ' kg</div>' +
+			'</div>' +
+			'<div class="variety-controls">' +
+				'<button type="button" class="qty-btn qty-minus" disabled>\u2212</button>' +
+				'<span class="qty-value">0</span>' +
+				'<button type="button" class="qty-btn qty-plus">+</button>' +
+			'</div>';
+
+		var qtyVal = card.querySelector('.qty-value');
+		var minusBtn = card.querySelector('.qty-minus');
+		var plusBtn = card.querySelector('.qty-plus');
+
+		selections[v.name] = 0;
+
+		plusBtn.addEventListener('click', function () {
+			var qty = Math.min(20, selections[v.name] + 1);
+			selections[v.name] = qty;
+			qtyVal.textContent = qty;
+			minusBtn.disabled = qty === 0;
+			card.classList.toggle('selected', qty > 0);
+			updateTotal();
+		});
+
+		minusBtn.addEventListener('click', function () {
+			var qty = Math.max(0, selections[v.name] - 1);
+			selections[v.name] = qty;
+			qtyVal.textContent = qty;
+			minusBtn.disabled = qty === 0;
+			card.classList.toggle('selected', qty > 0);
+			updateTotal();
+		});
+
+		return card;
 	}
 
 	fetch(url + '/rest/v1/varieties?available=eq.true&select=name,type,price_per_kg,price_per_box,box_weight_kg&order=type,name', {
 		headers: { 'apikey': key },
 	}).then(function (r) { return r.json(); }).then(function (rows) {
 		varieties = rows;
-		var currentType = '';
 		rows.forEach(function (v) {
-			if (v.type !== currentType) {
-				var group = document.createElement('optgroup');
-				group.label = v.type.charAt(0).toUpperCase() + v.type.slice(1);
-				varietySelect.appendChild(group);
-				currentType = v.type;
-			}
-			var opt = document.createElement('option');
-			opt.value = v.name;
-			opt.textContent = v.name + ' — ' + v.price_per_box + ' \u20AC';
-			varietySelect.lastChild.appendChild(opt);
+			grid.appendChild(renderCard(v));
 		});
-		if (rows.length === 1) {
-			varietySelect.value = rows[0].name;
-			updateTotal();
-		}
 	});
-
-	varietySelect.addEventListener('change', updateTotal);
-	qtyInput.addEventListener('input', updateTotal);
 
 	form.addEventListener('submit', async function (e) {
 		e.preventDefault();
@@ -148,24 +162,33 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 		if (form.website.value) return;
 
+		var items = [];
+		var totalEur = 0;
+		for (var name in selections) {
+			if (selections[name] > 0) {
+				var v = varieties.find(function (x) { return x.name === name; });
+				var subtotal = selections[name] * v.price_per_box;
+				items.push({ variety: name, quantity: selections[name], price_per_box: v.price_per_box, subtotal: subtotal });
+				totalEur += subtotal;
+			}
+		}
+		if (items.length === 0) return;
+
 		var fd = new FormData(form);
-		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
-		var v = getSelected();
-		var pricePerBox = v ? v.price_per_box : 0;
+		var itemsSummary = items.map(function (i) { return i.variety + ' x' + i.quantity; }).join(', ');
 		var body = {
 			customer_name: fd.get('name'),
 			phone: fd.get('phone'),
 			email: fd.get('email'),
 			address: fd.get('address'),
 			city: fd.get('city'),
-			variety: varietySelect.value,
-			quantity: qty,
-			total_eur: qty * pricePerBox,
+			variety: itemsSummary,
+			quantity: items.reduce(function (s, i) { return s + i.quantity; }, 0),
+			total_eur: totalEur,
 			notes: fd.get('notes') || null,
 		};
 
-		var btn = form.querySelector('.submit-btn');
-		btn.disabled = true;
+		submitBtn.disabled = true;
 
 		try {
 			var res = await fetch(url + '/rest/v1/orders', {
@@ -185,19 +208,21 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 				fetch(url + '/functions/v1/notify-order', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-					body: JSON.stringify(Object.assign({ lang: lang, order_id: orderId }, body)),
+					body: JSON.stringify(Object.assign({ lang: lang, order_id: orderId, items: items }, body)),
 				}).catch(function () {});
 				form.hidden = true;
-				productCard.hidden = true;
+				grid.hidden = true;
+				summaryEl.hidden = true;
 				wrapper.querySelector('.delivery-banner').hidden = true;
+				wrapper.querySelector('.section-title').hidden = true;
 				successEl.hidden = false;
 			} else {
 				errorEl.hidden = false;
-				btn.disabled = false;
+				submitBtn.disabled = false;
 			}
 		} catch (err) {
 			errorEl.hidden = false;
-			btn.disabled = false;
+			submitBtn.disabled = false;
 		}
 	});
 })();
@@ -205,65 +230,110 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 <style>
 	.order-form-wrapper {
-		max-width: 640px;
+		max-width: 720px;
 		margin: 0 auto;
 	}
 
-	.product-card {
+	.section-title {
+		margin-bottom: 0.8em;
+	}
+
+	.variety-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: 1em;
+		margin-bottom: 1.5em;
+	}
+
+	.variety-card {
+		background: var(--card-bg);
+		border: 2px solid var(--border);
+		border-radius: 12px;
+		padding: 1em;
+		transition: border-color 0.2s, box-shadow 0.2s;
+		display: flex;
+		flex-direction: column;
+	}
+	.variety-card.selected {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 1px var(--accent);
+	}
+
+	.variety-img-placeholder {
+		width: 100%;
+		aspect-ratio: 4/3;
+		background: var(--bg-alt, #f2efe6);
+		border-radius: 8px;
+		margin-bottom: 0.8em;
+	}
+
+	.variety-info {
+		flex: 1;
+		margin-bottom: 0.8em;
+	}
+	.variety-name {
+		font-weight: 600;
+		font-size: 1.05rem;
+	}
+	.variety-type {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+		text-transform: capitalize;
+		margin-bottom: 0.3em;
+	}
+	.variety-pricing {
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--accent);
+	}
+
+	.variety-controls {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.8em;
+		padding-top: 0.8em;
+		border-top: 1px solid var(--border);
+	}
+	.qty-btn {
+		width: 32px;
+		height: 32px;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background: var(--bg);
+		color: var(--text);
+		font-size: 1.1rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background 0.15s;
+	}
+	.qty-btn:hover:not(:disabled) {
+		background: var(--bg-alt, #f2efe6);
+	}
+	.qty-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+	.qty-value {
+		font-weight: 600;
+		font-size: 1.1rem;
+		min-width: 1.5em;
+		text-align: center;
+	}
+
+	.order-summary {
 		background: var(--card-bg);
 		border: 1px solid var(--border);
 		border-radius: 12px;
-		padding: 1.5em;
+		padding: 1em 1.5em;
 		margin-bottom: 1.5em;
 	}
-	.variety-section {
-		margin-bottom: 1em;
-	}
-	.variety-section label {
-		display: block;
-		font-size: 0.85rem;
-		font-weight: 600;
-		margin-bottom: 0.3em;
-	}
-	.variety-section select {
-		width: 100%;
-		padding: 0.6em 0.8em;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		font-size: 1rem;
-		background: var(--bg);
-		color: var(--text);
-		font-family: inherit;
-		box-sizing: border-box;
-	}
-	.variety-price {
-		display: block;
-		margin-top: 0.4em;
-		font-size: 0.85rem;
-		color: var(--text-muted);
-	}
-	.quantity-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 1em;
-	}
-	.quantity-row input {
-		width: 80px;
-		padding: 0.5em;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		font-size: 1rem;
-		text-align: center;
-		background: var(--bg);
-		color: var(--text);
-	}
-	.total-row {
+	.summary-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-top: 1em;
-		border-top: 1px solid var(--border);
 		font-weight: 600;
 	}
 	.total-price {
@@ -351,7 +421,7 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 		cursor: pointer;
 		transition: opacity 0.2s;
 	}
-	.submit-btn:hover {
+	.submit-btn:hover:not(:disabled) {
 		opacity: 0.85;
 	}
 	.submit-btn:disabled {
@@ -383,7 +453,15 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 	}
 
 	@media (max-width: 720px) {
+		.variety-grid {
+			grid-template-columns: 1fr 1fr;
+		}
 		.form-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+	@media (max-width: 440px) {
+		.variety-grid {
 			grid-template-columns: 1fr;
 		}
 	}
