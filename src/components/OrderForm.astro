@@ -101,16 +101,17 @@ const cities = ['Espoo', 'Helsinki', 'Vantaa', 'Kirkkonummi'];
 
 		if (form.website.value) return;
 
+		var fd = new FormData(form);
 		var qty = Math.max(1, Math.min(20, parseInt(qtyInput.value) || 1));
 		var body = {
-			customer_name: form.name.value.trim(),
-			phone: form.phone.value.trim(),
-			email: form.email.value.trim(),
-			address: form.address.value.trim(),
-			city: form.city.value,
+			customer_name: fd.get('name'),
+			phone: fd.get('phone'),
+			email: fd.get('email'),
+			address: fd.get('address'),
+			city: fd.get('city'),
 			quantity: qty,
 			total_eur: qty * 50,
-			notes: form.notes.value.trim() || null,
+			notes: fd.get('notes') || null,
 		};
 
 		var btn = form.querySelector('.submit-btn');
