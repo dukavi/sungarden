@@ -283,11 +283,15 @@
 	async function fetchYearData(year, onProgress) {
 		var currentYear = new Date().getFullYear();
 
-		// Check sessionStorage cache for current year
+		// Check sessionStorage cache for current year (expires daily)
 		if (year === currentYear) {
 			var cacheKey = 'sat-map-live-' + year;
+			var cacheTimeKey = cacheKey + '-time';
 			var cached = sessionStorage.getItem(cacheKey);
-			if (cached) {
+			var cachedTime = sessionStorage.getItem(cacheTimeKey);
+			var todayStr = fmtDate(new Date());
+
+			if (cached && cachedTime === todayStr) {
 				try {
 					var parsed = JSON.parse(cached);
 					if (parsed && parsed.length > 0) {
@@ -300,6 +304,7 @@
 			var data = await fetchCurrentYearLive(year, onProgress);
 			if (data.length > 0) {
 				sessionStorage.setItem(cacheKey, JSON.stringify(data));
+				sessionStorage.setItem(cacheTimeKey, todayStr);
 			}
 			return data;
 		}
