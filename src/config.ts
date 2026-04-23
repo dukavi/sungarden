@@ -1,3 +1,3 @@
 export const features = {
-	varieties: false,
+	varieties: true,
 };
