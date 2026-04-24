@@ -2,8 +2,6 @@
 import { Image } from 'astro:assets';
 import { t, getLocalePath } from '../i18n/utils';
 import type { Lang } from '../i18n/translations';
-import EmojiReactions from './EmojiReactions.astro';
-import Comments from './Comments.astro';
 
 interface Props {
 	lang: Lang;
@@ -44,9 +42,6 @@ function getImage(slug: string): ImageMetadata | null {
 	})}
 </div>
 <p class="photo-credit">{t(lang, 'varieties.photos')}</p>
-
-<EmojiReactions />
-<Comments lang={lang} />
 
 <style>
 	.varieties-list {
