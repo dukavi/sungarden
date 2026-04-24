@@ -1,0 +1,51 @@
+---
+import BaseHead from '../../../../components/BaseHead.astro';
+import Header from '../../../../components/Header.astro';
+import Footer from '../../../../components/Footer.astro';
+import VarietyDetail from '../../../../components/VarietyDetail.astro';
+import { t, getLocalePath } from '../../../../i18n/utils';
+import { varietyCategories } from '../../../../data/varieties';
+
+export function getStaticPaths() {
+	return Object.entries(varietyCategories).flatMap(([type, varieties]) =>
+		varieties.map(variety => ({ params: { type, variety } }))
+	);
+}
+
+const lang = 'en';
+const { type, variety } = Astro.params;
+const name = t(lang, `varieties.${type}.${variety}.name`);
+const categoryTitle = t(lang, `varieties.${type}.title`);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${name} — ${categoryTitle} — ${t(lang, 'site.title')}`} description={t(lang, `varieties.${type}.${variety}.desc`)} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<div class="container">
+				<a href={getLocalePath(lang, `/varieties/${type}`)} class="back-link">&larr; {categoryTitle}</a>
+				<VarietyDetail lang={lang} type={type} variety={variety} />
+			</div>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	main { padding: 6em 0; }
+	.back-link {
+		display: inline-block;
+		margin-bottom: 2em;
+		color: var(--accent);
+		text-decoration: none;
+		font-size: 0.9em;
+	}
+	.back-link:hover { text-decoration: underline; }
+	@media (max-width: 720px) {
+		main { padding: 3em 0; }
+	}
+</style>

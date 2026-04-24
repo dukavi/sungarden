@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import { t } from '../i18n/utils';
+import type { Lang } from '../i18n/translations';
+import EmojiReactions from './EmojiReactions.astro';
+import Comments from './Comments.astro';
+
+interface Props {
+	lang: Lang;
+	type: string;
+	variety: string;
+}
+
+const { lang, type, variety } = Astro.props;
+
+const allImages = import.meta.glob<{ default: ImageMetadata }>('/src/images/varieties/**/*.{png,jpg,jpeg}', { eager: true });
+
+const images = Object.entries(allImages)
+	.filter(([path]) => {
+		const filename = path.split('/').pop()?.split('.')[0] || '';
+		return path.includes(`/${type}/`) && (filename === variety || filename.startsWith(`${variety}-`));
+	})
+	.sort(([a], [b]) => a.localeCompare(b))
+	.map(([, mod]) => mod.default);
+
+const name = t(lang, `varieties.${type}.${variety}.name`);
+const detailKey = `varieties.${type}.${variety}.detail`;
+const detail = t(lang, detailKey);
+const desc = detail !== detailKey ? detail : t(lang, `varieties.${type}.${variety}.desc`);
+---
+
+<div class="variety-detail">
+	{images.length > 0 && (
+		<div class="gallery">
+			{images.map((img, i) => (
+				<div class="gallery-item">
+					<Image src={img} alt={`${name} — ${i + 1}`} width={800} height={600} />
+				</div>
+			))}
+		</div>
+	)}
+	<div class="variety-body">
+		<h1>{name}</h1>
+		<p class="desc">{desc}</p>
+	</div>
+	<p class="photo-credit">{t(lang, 'varieties.photos')}</p>
+	<EmojiReactions />
+	<Comments lang={lang} />
+</div>
+
+<style>
+	.variety-detail {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1em;
+		margin-bottom: 2em;
+	}
+	.gallery-item {
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+	}
+	.gallery-item img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		cursor: pointer;
+		transition: transform 0.3s ease;
+	}
+	.gallery-item img:hover {
+		transform: scale(1.03);
+	}
+	.variety-body {
+		background: var(--card-bg);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		padding: 2em;
+	}
+	.variety-body h1 {
+		font-size: 1.6em;
+		margin-bottom: 0.5em;
+	}
+	.desc {
+		color: var(--text-muted);
+		font-size: 1.05em;
+		line-height: 1.8;
+	}
+	.photo-credit {
+		text-align: center;
+		color: var(--text-muted);
+		font-size: 0.85em;
+		margin-top: 2em;
+		font-style: italic;
+	}
+	@media (max-width: 720px) {
+		.gallery {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
