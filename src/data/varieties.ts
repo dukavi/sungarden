@@ -3,5 +3,5 @@ export const varietyCategories: Record<string, string[]> = {
 	apples: ['williams-pride', 'delicates', 'sekai-ichi', 'pamyat-ulyanischeva', 'antonovka', 'tobias', 'pinova', 'novamac'],
 	pears: ['chizovskaya', 'xenia', 'tatiana', 'velesa', 'mramornaya', 'carola', 'pepi', 'summercrisp'],
 	plums: ['victoria'],
-	'japanese-plums': ['kometa', 'gift'],
+	'cherry-plums': ['kometa', 'gift'],
 };
