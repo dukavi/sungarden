@@ -134,8 +134,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'varieties.grapes.intro': 'Koeistutuksemme keskittyvät aikaisiin ja erittäin aikaisiin lajikkeisiin, jotka ehtivät kypsyä Etelä-Suomen lyhyen kasvukauden aikana.',
 		'varieties.grapes.liepsna.name': 'Liepsna',
 		'varieties.grapes.liepsna.desc': 'Liettualainen yleislajike (100–110 pv, SAT ~2100 °C). Pienet vaaleanpunaiset marjat (2,7–2,8 g), ananasaromi, sokeri 22 %. Tertut 180 g. Soveltuu viiniin, mehuun ja tuoreena. Pakkaskestävyys –27 °C.',
-		'varieties.grapes.express.name': 'Express',
-		'varieties.grapes.express.desc': 'Erittäin aikainen pöytärypäle (100 pv, SAT ~2000 °C). Suuret vaaleanpunaiset marjat (18–20 g), harmoninen maku. Tertut 700–1200 g. Pakkaskestävyys –32 °C.',
+		'varieties.grapes.express.name': 'Express Ranniy',
+		'varieties.grapes.express.desc': 'Erittäin aikainen eurooppalais-amurinen yleishybridi (95–105 pv, SAT ~2000 °C). Pienet tummansinisiset marjat (2–3 g), sokeri jopa 22 %. Tertut 250–500 g. Sopii viiniin, mehuun ja tuoreena. Pakkaskestävyys –32 °C.',
 		'varieties.grapes.denisovskiy.name': 'Denisovskiy',
 		'varieties.grapes.denisovskiy.desc': 'Venäläinen, yleislajike (125–130 pv, SAT ~2600 °C). Pienet tummat marjat (1,6–1,8 g), sokeripitoisuus 20–22 %. Soveltuu viiniin, mehuun ja tuoreena. Pakkaskestävyys –27 °C.',
 		'varieties.grapes.tason.name': 'Tason',
@@ -217,7 +217,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Variety detail pages (extended descriptions)
 		'varieties.grapes.liepsna.detail': 'Liepsna on liettualainen yleislajike, joka kypsyy 100–110 päivässä (SAT ~2100 °C). Marjat ovat pieniä ja vaaleanpunaisia (2,7–2,8 g), ja niissä on miellyttävä ananasaromi ja korkea sokeripitoisuus (22 %). Tertut ovat pienikokoisia, noin 180 g. Köynnös on voimakaskasvuinen ja kestää pakkasta –27 °C:een asti. Soveltuu erinomaisesti viinin ja mehun valmistukseen sekä tuoreena syötäväksi. Hyvä valinta pohjoiseen ilmastoon luotettavan kypsymisen ansiosta.',
-		'varieties.grapes.express.detail': 'Express on erittäin aikainen pöytärypäle, joka kypsyy noin 100 päivässä (SAT ~2000 °C). Marjat ovat suuria ja vaaleanpunaisia (18–20 g), maultaan harmonisia ja miellyttäviä. Tertut ovat vaikuttavan suuria, 700–1200 g. Yksi kestävimmistä pöytärypälelajikkeista — pakkaskestävyys –32 °C. Matala SAT-vaatimus tekee siitä erinomaisen valinnan Etelä-Suomen olosuhteisiin, joissa kasvukausi on lyhyt.',
+		'varieties.grapes.express.detail': 'Express Ranniy (Vaskovskiy) on erittäin aikainen eurooppalais-amurinen yleishybridi pohjoiseen viininviljelyyn. Kypsyy 95–105 päivässä, elokuun lopussa (SAT ~2000 °C). Marjat ovat pieniä (2–3 g), pyöreitä, tummansinisiä, härmäpintaisia. Maku on harmoninen ja miellyttävä, sokeripitoisuus jopa 22 %, happamuus 6–9 g/l. Tertut ovat pieniä tai keskikokoisia (250–500 g), lieriömäisiä, usein siivellisiä. Satoisuus on korkea — vaatii kuorman säätelyä. Pakkaskestävyys –32 °C. Heikko härmänkestävyys — vaatii härmäntorjuntaa. Soveltuu tuoreena syötäväksi, mehuun ja laadukkaaseen kotuviiniin (Cabernet-tyyppinen).',
 		'varieties.grapes.denisovskiy.detail': 'Denisovskiy on venäläinen yleislajike, jonka kypsymisaika on 125–130 päivää (SAT ~2600 °C). Marjat ovat pieniä ja tummia (1,6–1,8 g), sokeripitoisuus 20–22 %. Soveltuu viinin, mehun ja hillokeiden valmistukseen sekä tuoreena syötäväksi. Pakkaskestävyys –27 °C. SAT-vaatimus on korkea, joten lajike vaatii suotuisan kasvupaikan ja lämpimän kesän kypsyäkseen Suomessa.',
 		'varieties.grapes.tason.detail': 'Tason on erittäin aikainen pöytärypäle, joka kypsyy 100–110 päivässä (SAT ~2100 °C). Marjat ovat keskikokoisia ja vaaleanpunaisia (6–7 g), ja niissä on voimakas ja miellyttävä muskattiaromi. Sokeripitoisuus on 19–21 %. Tertut ovat suuria, 500–1200 g. Erinomainen pöytälajike tuoreena nautittavaksi. Pakkaskestävyys –22 °C — vaatii talvisuojausta Suomen oloissa.',
 		'varieties.grapes.krasen.detail': 'Krasen on yleislajike, jonka kypsymisaika on 125–130 päivää (SAT ~2550 °C). Marjat ovat pieniä, mustia ja siemennettömiä (2–3 g), maultaan muskaattisia. Sokeripitoisuus paikallisessa ilmastossa on 20–22 %. Tertut 400–600 g. Kypsyy syyskuun puolivälissä. Siemennettömyys tekee siitä erinomaisen viinin ja mehun raaka-aineen. Soveltuu myös rusinoiksi kuivattavaksi. Pakkaskestävyys –25 °C.',
@@ -286,6 +286,26 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.email.summary': 'Tilauksen yhteenveto',
 
 		'order.email.contact': 'Otamme sinuun yhteyttä vahvistaaksemme toimituksen. Maksu tapahtuu toimituksen yhteydessä.',
+
+		// Seedlings
+		'seedlings.title': 'Viinirypäleen taimet',
+		'seedlings.description': 'Pyydä viinirypäleen taimia Aurinkotarhalta. Taimet saatavilla toukokuun lopusta alkaen.',
+		'seedlings.intro': 'Täytä lomake pyytääksesi viinirypäleen taimia. Tämä on ennakkopyyntö — ei sitova tilaus eikä maksua. Voit muuttaa tai perua pyyntösi myöhemmin.',
+		'seedlings.availability': 'Taimet saatavilla toukokuun lopusta alkaen',
+		'seedlings.delivery.notice': 'Postitoimitusta ei ole saatavilla',
+		'seedlings.delivery.uusimaa': 'Tarvitsetko toimituksen Uudellemaalle? Lähetä pyyntö, niin yritämme löytää ratkaisun.',
+		'seedlings.form.select': 'Valitse lajikkeet',
+		'seedlings.form.pcs': 'kpl',
+		'seedlings.form.name': 'Nimi',
+		'seedlings.form.email': 'Sähköposti',
+		'seedlings.form.phone': 'Puhelinnumero',
+		'seedlings.form.notes': 'Lisätietoja tai toimitustoive (valinnainen)',
+		'seedlings.form.submit': 'Lähetä pyyntö',
+		'seedlings.form.note': 'Tämä on pyyntö, ei ostotilaus. Maksua ei vaadita.',
+		'seedlings.success.title': 'Kiitos pyynnöstäsi!',
+		'seedlings.success.text': 'Olemme vastaanottaneet pyyntösi. Otamme sinuun yhteyttä vahvistaaksemme yksityiskohdat.',
+		'seedlings.error': 'Pyynnön lähetys epäonnistui. Yritä uudelleen.',
+		'seedlings.link.details': 'Lisätietoja',
 
 		// Footer
 		'footer.rights': 'Kaikki oikeudet pidätetään.',
@@ -415,8 +435,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'varieties.grapes.intro': 'Våra provplanteringar fokuserar på tidiga och mycket tidiga sorter som hinner mogna under Södra Finlands korta växtsäsong.',
 		'varieties.grapes.liepsna.name': 'Liepsna',
 		'varieties.grapes.liepsna.desc': 'Litauisk universell sort (100–110 dagar, SAT ~2100 °C). Små rosa bär (2,7–2,8 g), ananasarom, socker 22 %. Klasar 180 g. Lämpad för vin, juice och färskkonsumtion. Köldtålighet –27 °C.',
-		'varieties.grapes.express.name': 'Express',
-		'varieties.grapes.express.desc': 'Ultratidigt mognande bordsdruva (100 dagar, SAT ~2000 °C). Stora ljusrosa bär (18–20 g), harmonisk smak. Klasar 700–1200 g. Köldtålighet –32 °C.',
+		'varieties.grapes.express.name': 'Express Ranniy',
+		'varieties.grapes.express.desc': 'Ultratidigt mognande europeisk-amurisk universalhybrid (95–105 dagar, SAT ~2000 °C). Små mörkblå bär (2–3 g), socker upp till 22 %. Klasar 250–500 g. Lämpad för vin, juice och färskkonsumtion. Köldtålighet –32 °C.',
 		'varieties.grapes.denisovskiy.name': 'Denisovskiy',
 		'varieties.grapes.denisovskiy.desc': 'Rysk, universell sort (125–130 dagar, SAT ~2600 °C). Små mörka bär (1,6–1,8 g), sockerhalt 20–22 %. Lämpad för vin, juice och färskkonsumtion. Köldtålighet –27 °C.',
 		'varieties.grapes.tason.name': 'Tason',
@@ -498,7 +518,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Variety detail pages (extended descriptions)
 		'varieties.grapes.liepsna.detail': 'Liepsna är en litauisk universell sort som mognar på 100–110 dagar (SAT ~2100 °C). Bären är små och rosa (2,7–2,8 g) med en trevlig ananasarom och hög sockerhalt (22 %). Klasarna är kompakta, cirka 180 g. Vinstocken är kraftigväxande och tål köld ner till –27 °C. Utmärkt för vin, juice och färskkonsumtion. Ett bra val för nordligt klimat tack vare pålitlig mognad.',
-		'varieties.grapes.express.detail': 'Express är en ultratidigt mognande bordsdruva som mognar på cirka 100 dagar (SAT ~2000 °C). Bären är stora och ljusrosa (18–20 g) med harmonisk, behaglig smak. Klasarna är imponerande stora, 700–1200 g. En av de härdigaste bordsdruvorna — köldtålighet –32 °C. Det låga SAT-kravet gör den idealisk för Södra Finlands korta växtperiod.',
+		'varieties.grapes.express.detail': 'Express Ranniy (Vaskovskij) är en ultratidigt mognande europeisk-amurisk universalhybrid för nordlig vinodling. Mognar på 95–105 dagar, i slutet av augusti (SAT ~2000 °C). Bären är små (2–3 g), runda, mörkblå med pruinabeläggning. Smaken är harmonisk och behaglig, sockerhalt upp till 22 %, syra 6–9 g/l. Klasarna är små till medelstora (250–500 g), cylindriska, ofta vingade. Avkastningen är hög — kräver belastningsreglering. Köldtålighet –32 °C. Svag mjöldaggsresistens — kräver mjöldaggsskydd. Lämpad för färskkonsumtion, juice och kvalitativt hemgjort vin (Cabernet-typ).',
 		'varieties.grapes.denisovskiy.detail': 'Denisovskiy är en rysk universell sort med en mognadsperiod på 125–130 dagar (SAT ~2600 °C). Bären är små och mörka (1,6–1,8 g) med sockerhalt 20–22 %. Lämpad för vin, juice och sylt samt färskkonsumtion. Köldtålighet –27 °C. Det höga SAT-kravet innebär att sorten kräver en gynnsam växtplats och varm sommar för att mogna i Finland.',
 		'varieties.grapes.tason.detail': 'Tason är en ultratidigt mognande bordsdruva som mognar på 100–110 dagar (SAT ~2100 °C). Bären är medelstora och ljusrosa (6–7 g) med en stark och behaglig muskatarom. Sockerhalt 19–21 %. Klasar 500–1200 g. Utmärkt bordssort för färskkonsumtion. Köldtålighet –22 °C — kräver vinterskydd under finska förhållanden.',
 		'varieties.grapes.krasen.detail': 'Krasen är en universell sort med mognadsperiod 125–130 dagar (SAT ~2550 °C). Bären är små, svarta och kärnfria (2–3 g) med muskatliknande smak. Sockerhalt i vårt klimat 20–22 %. Klasar 400–600 g. Mognar i mitten av september. Kärnfriheten gör den utmärkt för vin och juice. Lämpar sig också för torkning till russin. Köldtålighet –25 °C.',
@@ -567,6 +587,26 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.email.summary': 'Beställningsöversikt',
 
 		'order.email.contact': 'Vi kontaktar dig för att bekräfta leveransen. Betalning sker vid leverans.',
+
+		// Seedlings
+		'seedlings.title': 'Druvplantor',
+		'seedlings.description': 'Begär druvplantor från Aurinkotarha. Plantor tillgängliga från slutet av maj.',
+		'seedlings.intro': 'Fyll i formuläret för att begära druvplantor. Detta är en förfrågan — inte en bindande beställning och ingen betalning. Du kan ändra eller avbryta din förfrågan senare.',
+		'seedlings.availability': 'Plantor tillgängliga från slutet av maj',
+		'seedlings.delivery.notice': 'Postleverans är inte tillgänglig',
+		'seedlings.delivery.uusimaa': 'Behöver du leverans i Nyland? Skicka en förfrågan så försöker vi hitta en lösning.',
+		'seedlings.form.select': 'Välj sorter',
+		'seedlings.form.pcs': 'st',
+		'seedlings.form.name': 'Namn',
+		'seedlings.form.email': 'E-post',
+		'seedlings.form.phone': 'Telefonnummer',
+		'seedlings.form.notes': 'Ytterligare information eller leveransönskemål (valfritt)',
+		'seedlings.form.submit': 'Skicka förfrågan',
+		'seedlings.form.note': 'Detta är en förfrågan, inte en köporder. Ingen betalning krävs.',
+		'seedlings.success.title': 'Tack för din förfrågan!',
+		'seedlings.success.text': 'Vi har tagit emot din förfrågan. Vi kontaktar dig för att bekräfta detaljerna.',
+		'seedlings.error': 'Förfrågan kunde inte skickas. Försök igen.',
+		'seedlings.link.details': 'Läs mer',
 
 		// Footer
 		'footer.rights': 'Alla rättigheter förbehållna.',
@@ -696,8 +736,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'varieties.grapes.intro': 'Our trial plantings focus on early and very early varieties that ripen during the short growing season of Southern Finland.',
 		'varieties.grapes.liepsna.name': 'Liepsna',
 		'varieties.grapes.liepsna.desc': 'Lithuanian universal variety (100–110 days, SAT ~2100 °C). Small pink berries (2.7–2.8 g), pineapple aroma, sugar 22%. Clusters 180 g. Suitable for wine, juice and fresh eating. Cold hardy to –27 °C.',
-		'varieties.grapes.express.name': 'Express',
-		'varieties.grapes.express.desc': 'Ultra-early table grape (100 days, SAT ~2000 °C). Large light pink berries (18–20 g), harmonious flavour. Clusters 700–1200 g. Cold hardy to –32 °C.',
+		'varieties.grapes.express.name': 'Express Ranniy',
+		'varieties.grapes.express.desc': 'Ultra-early European-Amur universal hybrid (95–105 days, SAT ~2000 °C). Small dark blue berries (2–3 g), sugar up to 22%. Clusters 250–500 g. Suitable for wine, juice and fresh eating. Cold hardy to –32 °C.',
 		'varieties.grapes.denisovskiy.name': 'Denisovskiy',
 		'varieties.grapes.denisovskiy.desc': 'Russian, universal variety (125–130 days, SAT ~2600 °C). Small dark berries (1.6–1.8 g), sugar 20–22%. Suitable for wine, juice and fresh eating. Cold hardy to –27 °C.',
 		'varieties.grapes.tason.name': 'Tason',
@@ -779,7 +819,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
 		// Variety detail pages (extended descriptions)
 		'varieties.grapes.liepsna.detail': 'Liepsna is a Lithuanian universal variety that ripens in 100–110 days (SAT ~2100 °C). The berries are small and pink (2.7–2.8 g) with a pleasant pineapple aroma and high sugar content (22%). Clusters are compact, about 180 g. The vine is vigorous and cold hardy to –27 °C. Excellent for wine, juice and fresh eating. A good choice for northern climates thanks to reliable ripening.',
-		'varieties.grapes.express.detail': 'Express is an ultra-early table grape that ripens in about 100 days (SAT ~2000 °C). The berries are large and light pink (18–20 g) with harmonious, pleasant flavour. Clusters are impressively large at 700–1200 g. One of the hardiest table grape varieties — cold hardy to –32 °C. The low SAT requirement makes it an excellent choice for Southern Finland where the growing season is short.',
+		'varieties.grapes.express.detail': 'Express Ranniy (Vaskovskiy) is an ultra-early European-Amur universal hybrid for northern viticulture. Ripens in 95–105 days, at the end of August (SAT ~2000 °C). The berries are small (2–3 g), round, dark blue with a pruinose coating. Flavour is harmonious and pleasant, sugar content up to 22%, acidity 6–9 g/l. Clusters are small to medium (250–500 g), cylindrical, often winged. Yield is high — requires crop load regulation. Cold hardy to –32 °C. Poor mildew resistance — requires mildew protection. Suitable for fresh eating, juice and quality homemade wine (Cabernet-type).',
 		'varieties.grapes.denisovskiy.detail': 'Denisovskiy is a Russian universal variety with a ripening period of 125–130 days (SAT ~2600 °C). The berries are small and dark (1.6–1.8 g) with 20–22% sugar content. Suitable for wine, juice, preserves and fresh eating. Cold hardy to –27 °C. The high SAT requirement means this variety needs a favourable growing site and warm summer to ripen fully in Finland.',
 		'varieties.grapes.tason.detail': 'Tason is an ultra-early table grape that ripens in 100–110 days (SAT ~2100 °C). The berries are medium-sized and light pink (6–7 g) with a strong, pleasant muscat aroma. Sugar content 19–21%. Clusters 500–1200 g. An excellent table variety for fresh eating. Cold hardy to –22 °C — requires winter protection under Finnish conditions.',
 		'varieties.grapes.krasen.detail': 'Krasen is a universal variety with a ripening period of 125–130 days (SAT ~2550 °C). The berries are small, black and seedless (2–3 g) with muscat-like flavour. Sugar content in our climate is 20–22%. Clusters 400–600 g. Ripens mid-September. The seedlessness makes it excellent raw material for wine and juice. Also suitable for drying into raisins. Cold hardy to –25 °C.',
@@ -848,6 +888,26 @@ export const translations: Record<Lang, Record<string, string>> = {
 		'order.email.summary': 'Order summary',
 
 		'order.email.contact': 'We will contact you to confirm the delivery. Payment is made upon delivery.',
+
+		// Seedlings
+		'seedlings.title': 'Grape Seedlings',
+		'seedlings.description': 'Request grape seedlings from Aurinkotarha. Seedlings available from late May.',
+		'seedlings.intro': 'Fill out the form to request grape seedlings. This is a non-binding request — no payment required. You can change or cancel your request later.',
+		'seedlings.availability': 'Seedlings available from late May',
+		'seedlings.delivery.notice': 'Postal delivery is not available',
+		'seedlings.delivery.uusimaa': 'Need delivery in Uusimaa? Send a request and we will try to find a solution.',
+		'seedlings.form.select': 'Select varieties',
+		'seedlings.form.pcs': 'pcs',
+		'seedlings.form.name': 'Name',
+		'seedlings.form.email': 'Email',
+		'seedlings.form.phone': 'Phone number',
+		'seedlings.form.notes': 'Additional notes or delivery preferences (optional)',
+		'seedlings.form.submit': 'Send request',
+		'seedlings.form.note': 'This is a request, not a purchase order. No payment required.',
+		'seedlings.success.title': 'Thank you for your request!',
+		'seedlings.success.text': 'We have received your request. We will contact you to confirm the details.',
+		'seedlings.error': 'Failed to send request. Please try again.',
+		'seedlings.link.details': 'Learn more',
 
 		// Footer
 		'footer.rights': 'All rights reserved.',
